@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <title>game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+</head>
+<body>
+    <div id="board">
+        {% for x in range(game.board_size_x) %}
+        <div class="row">
+        {% for y in range(game.board_size_y) %}
+            <div id="cell_{{x}}_{{y}}" class="cell">
+                <p class="cell-label">x:{{x}} y:{{y}}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        document.getElementById("board").style.gridTemplateColumns = "repeat({{game.board_size_y}}, 1fr)";
+    </script>
+</body>
+</html>
