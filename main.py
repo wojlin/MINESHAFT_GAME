@@ -23,29 +23,29 @@ class GameHandler(object):
     app = None
 
     def __init__(self, name):
-        self.settings = json.loads(open('settings.json').read())
+        self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
         self.add_endpoints()
         threading.Thread(target=self.run_api, args=()).start()
 
         self.games: Dict[str, GameEngine.Game] = {}
 
-        self.crate_game("test game")
+        players = [GameEngine.Player(player_name=f"player_{x}", player_id=str(uuid.uuid4())) for x in range(5)]
+        self.crate_game(name="test game", players=players, config=self.config)
 
         for game in self.games:
             print(self.games[game].info())
-            print(f"http://{self.settings['host']}:{self.settings['port']}/game/{self.games[game].game_id}")
 
-    def crate_game(self, name: str):
-        game_id = str(uuid.uuid1())
-        self.games[game_id] = GameEngine.Game(11, 11, name, game_id)
+    def crate_game(self, name: str, players: list[GameEngine.Player], config: dict):
+        game_id = str(uuid.uuid4())
+        self.games[game_id] = GameEngine.Game(11, 11, name, game_id, players, config)
 
     def add_endpoints(self):
         self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)
         self.add_endpoint(endpoint='/game/<game_id>', endpoint_name='game', handler=self.game)
 
     def run_api(self):
-        self.app.run(host=self.settings["host"], port=self.settings["port"], debug=self.settings["debug"])
+        self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler))

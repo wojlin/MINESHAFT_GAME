@@ -16,8 +16,23 @@
         </div>
         {% endfor %}
     </div>
+    <div id="players-panel">
+        {% for x in range(game.players|length) %}
+            <div id="player_{{game.players[x].player_id}}" class="player-panel">
+                <table>
+                    <tr>
+                        <td>Player name:</td><td>{{game.players[x].player_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Player ID:</td><td>{{game.players[x].player_id}}</td>
+                    </tr>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
     <script>
         document.getElementById("board").style.gridTemplateColumns = "repeat({{game.board_size_y}}, 1fr)";
+        document.getElementById("players-panel").style.gridTemplateRows = "repeat({{game.players|length}}, 1fr)";
     </script>
 </body>
 </html>
