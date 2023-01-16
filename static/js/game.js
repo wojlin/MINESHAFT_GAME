@@ -19,6 +19,17 @@ function update_game_status(message)
         }
 
         document.getElementById("player_"+message["game_turn"]+"_turn").style.visibility = "visible";
+
+        document.getElementById("player-turn-text").innerHTML = document.getElementById(message["game_turn"]+"_name").innerHTML;
+
+        if(document.getElementById("data-player_id").innerHTML == message["game_turn"])
+        {
+            document.getElementById("action-panel-end_turn_button").disabled = false;
+        }else
+        {
+            document.getElementById("action-panel-end_turn_button").disabled = true;
+        }
+
     }
     else
     {

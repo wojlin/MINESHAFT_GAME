@@ -3,3 +3,7 @@ class Player:
         self.player_name = player_name
         self.player_id = player_id
 
+        self.player_role = None
+        self.player_cards = []
+
+

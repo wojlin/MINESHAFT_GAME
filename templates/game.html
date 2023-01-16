@@ -5,11 +5,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
 </head>
 <body>
+    <div id="data">
+        <p id="data-player_id">{{player_id}}</p>
+    </div>
     <div id="action-panel">
         <p>your name: {{game.players[player_id].player_name}}</p>
-        <button onclick="end_turn('{{game.game_id}}','{{player_id}}');">end turn</button>
+        <button id="action-panel-end_turn_button" onclick="end_turn('{{game.game_id}}','{{player_id}}');" disabled>end turn</button>
     </div>
-    <div id="player-turn"><p>{{game.players[game.turn].player_name}} turn...</p></div>
+    <div id="player-turn"><p><span id="player-turn-text">{{game.players[game.turn].player_name}}</span> turn...</p></div>
     <div id="board">
         {% for x in range(game.board_size_x) %}
         <div class="row">
@@ -27,7 +30,7 @@
                 <div class="player-panel-turn" id="player_{{game.players[player].player_id}}_turn"></div>
                 <table>
                     <tr>
-                        <td>Player name:</td><td>{{game.players[player].player_name}}</td>
+                        <td>Player name:</td><td id="{{game.players[player].player_id}}_name">{{game.players[player].player_name}}</td>
                     </tr>
                     <tr>
                         <td>Player ID:</td><td>{{game.players[player].player_id}}</td>
