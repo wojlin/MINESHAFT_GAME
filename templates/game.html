@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
 </head>
 <body>
+    <div id="action-panel">
+        <p>your name: {{game.players[player_id].player_name}}</p>
+        <button onclick="end_turn('{{game.game_id}}','{{player_id}}');">end turn</button>
+    </div>
+    <div id="player-turn"><p>{{game.players[game.turn].player_name}} turn...</p></div>
     <div id="board">
         {% for x in range(game.board_size_x) %}
         <div class="row">
@@ -17,14 +22,15 @@
         {% endfor %}
     </div>
     <div id="players-panel">
-        {% for x in range(game.players|length) %}
-            <div id="player_{{game.players[x].player_id}}" class="player-panel">
+        {% for player in game.players %}
+            <div id="player_{{game.players[player].player_id}}" class="player-panel">
+                <div class="player-panel-turn" id="player_{{game.players[player].player_id}}_turn"></div>
                 <table>
                     <tr>
-                        <td>Player name:</td><td>{{game.players[x].player_name}}</td>
+                        <td>Player name:</td><td>{{game.players[player].player_name}}</td>
                     </tr>
                     <tr>
-                        <td>Player ID:</td><td>{{game.players[x].player_id}}</td>
+                        <td>Player ID:</td><td>{{game.players[player].player_id}}</td>
                     </tr>
                 </table>
             </div>
@@ -33,6 +39,11 @@
     <script>
         document.getElementById("board").style.gridTemplateColumns = "repeat({{game.board_size_y}}, 1fr)";
         document.getElementById("players-panel").style.gridTemplateRows = "repeat({{game.players|length}}, 1fr)";
+        document.getElementById("player_{{game.turn}}_turn").style.visibility = "visible";
+
+        setInterval(function(){fetch_game_status("{{game.game_id}}")}, 1000);
+
     </script>
+    <script src="{{url_for('static', filename='js/game.js')}}"></script>
 </body>
 </html>

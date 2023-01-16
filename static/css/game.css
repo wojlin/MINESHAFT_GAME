@@ -63,4 +63,43 @@ body
 {
     width:100%;
     border: solid 0.3vh black;
+    position: relative;
+}
+
+
+.player-panel-turn {
+  position: absolute;
+  top:50%;
+  left: -5vh;
+  border-top: 5vh solid transparent;
+  border-bottom: 5vh solid transparent;
+  border-left: 5vh solid black;
+  transform: translate(0,-50%);
+  visibility: hidden;
+}
+
+
+#player-turn
+{
+	position: absolute;
+	top: 0;
+	margin: auto;
+	left: 0;
+	right: 0;
+	width: 40%;
+	text-align: center;
+}
+
+#player-turn > p
+{
+	font-size: 4vh;
+}
+
+#action-panel {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	border-right: 0.5vh solid black;
+	width: 20%;
 }
