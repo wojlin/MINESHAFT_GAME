@@ -41,7 +41,7 @@ class GameHandler(object):
 
     def crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
-        self.games[game_id] = GameEngine.Game(11, 11, name, game_id, players, config)
+        self.games[game_id] = GameEngine.Game(12, 9, name, game_id, players, config)
 
     def add_endpoints(self):
         self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)

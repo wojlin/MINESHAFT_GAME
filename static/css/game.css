@@ -28,8 +28,6 @@ body
 
 #board
 {
-    width: 96vh;
-    height: 96vh;
     margin: auto;
     border: solid 0.5vh var(--border-color);
     display: grid;
@@ -37,6 +35,7 @@ body
     margin-top: 2vh;
     font-size: 1vh;
     position:relative;
+    overflow: hidden;
 }
 
 #board-background
@@ -214,4 +213,17 @@ body
 	width: 8vh;
 	height: 8vh;
 	display: table-cell;
+}
+
+#action-panel-cards_deck
+{
+    border: solid 0.2vh var(--border-color);
+	width: 8vh;
+	height: 8vh;
+	margin:auto;
+	marin-top:2vh;
+	margin-bottom:2vh;
+	font-size:7vh;
+	line-height:7vh;
+	text-align:center;
 }

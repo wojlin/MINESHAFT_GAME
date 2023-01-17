@@ -102,18 +102,8 @@ class Game(GameEngine):
             return {"message_type": "status", "message_content": "game can be created"}
 
     def info(self):
-        info_str =  f"uuid: {self.game_id}\n" \
-                    f"name: {self.name}\n" \
-                    f"players:\n[\n"
-
-        for player in self.players:
-            player = self.players[player]
-            url_base = f"http://{self.config['host']}:{self.config['port']}/game"
-            url_args = f"?game_id={self.game_id}&player_id={player.player_id}"
-
-            info_str += f"name: {player.player_name}     id: {player.player_id}     url: {url_base+url_args}\n"
-
-        info_str += "]\n"
+        info_str = f"uuid: {self.game_id}\n" \
+                   f"name: {self.name}\n"
 
         info_str += f"board size: {self.board_size_x}x{self.board_size_y}\n"
 
@@ -121,6 +111,17 @@ class Game(GameEngine):
 
         for card in self.cards:
             info_str += card.info() + '\n'
+
+        info_str += f"players:\n[\n"
+
+        for player in self.players:
+            player = self.players[player]
+            url_base = f"http://{self.config['host']}:{self.config['port']}/game"
+            url_args = f"?game_id={self.game_id}&player_id={player.player_id}"
+
+            info_str += f"name: {player.player_name}     id: {player.player_id}     url: {url_base + url_args}\n"
+
+        info_str += "]\n"
 
         return info_str
 
