@@ -59,11 +59,19 @@ class Game(GameEngine):
         for player_id, player_obj in players.items():
             player_obj.player_role = self.good_player
 
-        self.saboteur_amount = math.floor((len(self.players) - 1) / 2)
+        self.cards_amount = 44 + 27  # 44 cards of tunnels and 27 cards of action
 
-        for x in range(self.saboteur_amount):
+        self.saboteur_amount = math.floor(22/(len(self.players)))
+
+        saboteurs = []
+        while len(saboteurs) < self.saboteur_amount:
             player_id, player_obj = random.choice(list(self.players.items()))
-            player_obj.player_role = self.bad_player
+            if player_id not in saboteurs:
+                saboteurs.append(player_id)
+                player_obj.player_role = self.bad_player
+
+        x = len(self.players)
+        self.cards_per_player_amount = 6 if 3 <= x <= 5 else 4 if 6 <= x <= 10 else 0
 
     def end_turn(self):
         self.__current_turn_num = self.__current_turn_num + 1 if self.__current_turn_num < len(self.players) else 0
