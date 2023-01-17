@@ -18,7 +18,7 @@
             </tr>
         </table>
         <table class="action-panel-player-cards-table">
-            {% for x in range((game.cards_per_player_amount / 2) | int) %}
+            {% for x in range((game.CARDS_PER_PLAYER_AMOUNT / 2) | int) %}
             <tr>
                 {% for x in range(2) %}
                 <td class="action-panel-player-cards-table-cell">card {{x}}</td>
