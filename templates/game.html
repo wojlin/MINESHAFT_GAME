@@ -9,9 +9,16 @@
         <p id="data-player_id">{{player_id}}</p>
     </div>
     <div id="action-panel">
-
+        <div id="action-panel_round-panel">
+            <p>round <span id="action-panel-round_panel-round_text">{{game.round}}</span> / <span>{{game.ROUNDS_AMOUNT}}</span></p>
+        </div>
         <div id="cards-panel">
             <div id="action-panel-cards_deck">?</div>
+            <table>
+                <tr>
+                    <td>cards left</td><td> : </td><td id="action-panel-cards_deck-cards_left_text">{{game.cards|length}}</td>
+                </tr>
+            </table>
         </div>
         <div id="player-info-panel">
             <table>
@@ -27,7 +34,7 @@
             {% for x in range((game.CARDS_PER_PLAYER_AMOUNT / 2) | int) %}
             <tr>
                 {% for y in range(2) %}
-                <td class="action-panel-player-cards-table-cell"><img  id="card_slot_{{(x+1)*(y+1)}}" src="" alt="" /><p>x</p></td>
+                <td class="action-panel-player-cards-table-cell"><img  id="card_slot_{{(x+1)*(y+1)}}" src="{{ url_for('static', filename='images/' + game.players[player_id].player_cards[((x+1)*(y+1) - 1) | int].picture_url)}}" alt="" /><p>x</p></td>
                 {% endfor %}
             </tr>
             {% endfor %}
@@ -40,9 +47,9 @@
     </div>
     <div id="board">
         <img id="board-background" src="{{ url_for('static', filename='images/background.png') }}" alt=""/>
-        {% for x in range(game.board_size_x) %}
+        {% for x in range(game.BOARD_SIZE_X) %}
         <div class="row">
-        {% for y in range(game.board_size_y) %}
+        {% for y in range(game.BOARD_SIZE_Y) %}
             <div id="cell_{{x}}_{{y}}" class="cell">
                 <p class="cell-label">x:{{x}} y:{{y}}</p>
             </div>
@@ -54,22 +61,15 @@
         {% for player in game.players %}
             <div id="player_{{game.players[player].player_id}}" class="player-panel">
                 <div class="player-panel-turn" id="player_{{game.players[player].player_id}}_turn"></div>
-                <table>
-                    <tr>
-                        <td>Player name:</td><td id="{{game.players[player].player_id}}_name">{{game.players[player].player_name}}</td>
-                    </tr>
-                    <tr>
-                        <td>Player ID:</td><td>{{game.players[player].player_id}}</td>
-                    </tr>
-                </table>
+                <p id="{{game.players[player].player_id}}_name">{{game.players[player].player_name}}</p>
             </div>
         {% endfor %}
     </div>
     <script>
-        document.getElementById("board").style.gridTemplateColumns = "repeat({{game.board_size_x}}, 1fr)";
+        document.getElementById("board").style.gridTemplateColumns = "repeat({{game.BOARD_SIZE_X}}, 1fr)";
         document.getElementById("players-panel").style.gridTemplateRows = "repeat({{game.players|length}}, 1fr)";
         document.getElementById("board").style.height = "90vh";
-        document.getElementById("board").style.width = "{{(90 / game.board_size_y) * game.board_size_x}}vh";
+        document.getElementById("board").style.width = "{{(90 / game.BOARD_SIZE_Y) * game.BOARD_SIZE_X}}vh";
         document.getElementById("player_{{game.turn}}_turn").style.visibility = "visible";
 
         setInterval(function(){fetch_game_status("{{game.game_id}}")}, 1000);

@@ -7,9 +7,9 @@ from Player import Player
 
 
 class GameEngine:
-    def __init__(self, cells_x: int, cells_y: int, name: str, game_id: str, players: Dict[str, Player], config: dict):
-        self.board_size_x = cells_x
-        self.board_size_y = cells_y
+    def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
+        self.BOARD_SIZE_X = 12
+        self.BOARD_SIZE_Y = 9
         self.name = name
         self.game_id = game_id
         self.players = players
@@ -31,9 +31,13 @@ class GameEngine:
         self.__assign_card_amount_per_player()
 
         self.cards = self.__create_card_deck()
+        self.__assign_initial_cards_to_players()
 
         self.current_turn_num = 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
+
+        self.round = 1
+        self.ROUNDS_AMOUNT = 3
 
     def __assign_player_roles(self):
         for player_id, player_obj in self.players.items():
@@ -77,16 +81,16 @@ class GameEngine:
 
         return card_deck
 
+    def __assign_initial_cards_to_players(self):
+        for player_id, player_obj in self.players.items():
+            for i in range(self.CARDS_PER_PLAYER_AMOUNT):
+                player_obj.player_cards.append(self.cards[-1])
+                self.cards.pop()
+
 
 class Game(GameEngine):
-    def __init__(self, cells_x: int, cells_y: int, name: str, game_id: str, players: Dict[str, Player], config: dict):
-        GameEngine.__init__(self,
-                            cells_x=cells_x,
-                            cells_y=cells_y,
-                            name=name,
-                            game_id=game_id,
-                            players=players,
-                            config=config)
+    def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
+        GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config)
 
     def end_turn(self):
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) else 0
@@ -105,7 +109,7 @@ class Game(GameEngine):
         info_str = f"uuid: {self.game_id}\n" \
                    f"name: {self.name}\n"
 
-        info_str += f"board size: {self.board_size_x}x{self.board_size_y}\n"
+        info_str += f"board size: {self.BOARD_SIZE_X}x{self.BOARD_SIZE_Y}\n"
 
         info_str += f"cards: {self.INITIAL_CARDS_AMOUNT}\n"
 

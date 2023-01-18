@@ -20,7 +20,11 @@ function update_game_status(message)
 
         document.getElementById("player_"+message["game_turn"]+"_turn").style.visibility = "visible";
 
+        document.getElementById("action-panel-cards_deck-cards_left_text").innerHTML = message["cards_left"];
+
         document.getElementById("player-turn-text").innerHTML = document.getElementById(message["game_turn"]+"_name").innerHTML;
+
+        document.getElementById("action-panel-round_panel-round_text").innerHTML = message['game_round']
 
         if(document.getElementById("data-player_id").innerHTML == message["game_turn"])
         {
