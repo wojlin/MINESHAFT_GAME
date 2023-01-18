@@ -59,9 +59,16 @@
     </div>
     <div id="players-panel">
         {% for player in game.players %}
-            <div id="player_{{game.players[player].player_id}}" class="player-panel">
-                <div class="player-panel-turn" id="player_{{game.players[player].player_id}}_turn"></div>
+            <div id="player_{{game.players[player].player_id}}" class="players-panel">
+                <div class="players-panel_turn" id="players_{{game.players[player].player_id}}_turn"></div>
                 <p id="{{game.players[player].player_id}}_name">{{game.players[player].player_name}}</p>
+                <table class="players-panel_turn_actions">
+                    <tr>
+                        {% for action_number in range(game.ACTION_CARDS_TYPES_AMOUNT) %}
+                            <td class="players-panel_turn_actions_action"><img data-actionnum="{{action_number}}" data-actionid="{{game.players[player].player_id}}"  class="action_image" src="{{ url_for('static', filename= 'images/' + (action_number) | string + '_positive.png') }}" alt=""/></td>
+                        {% endfor %}
+                    </tr>
+                </table>
             </div>
         {% endfor %}
     </div>
@@ -70,7 +77,7 @@
         document.getElementById("players-panel").style.gridTemplateRows = "repeat({{game.players|length}}, 1fr)";
         document.getElementById("board").style.height = "90vh";
         document.getElementById("board").style.width = "{{(90 / game.BOARD_SIZE_Y) * game.BOARD_SIZE_X}}vh";
-        document.getElementById("player_{{game.turn}}_turn").style.visibility = "visible";
+        document.getElementById("players_{{game.turn}}_turn").style.visibility = "visible";
 
         setInterval(function(){fetch_game_status("{{game.game_id}}")}, 1000);
 

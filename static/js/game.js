@@ -12,13 +12,13 @@ function update_game_status(message)
     {
         console.log("fetched game status...")
 
-        var arrows = document.getElementsByClassName("player-panel-turn");
+        let arrows = document.getElementsByClassName("player-panel-turn");
         for (var i = 0; i < arrows.length; i++) {
 
            arrows[i].style.visibility = "hidden";
         }
 
-        document.getElementById("player_"+message["game_turn"]+"_turn").style.visibility = "visible";
+        document.getElementById("players_"+message["game_turn"]+"_turn").style.visibility = "visible";
 
         document.getElementById("action-panel-cards_deck-cards_left_text").innerHTML = message["cards_left"];
 
@@ -34,6 +34,25 @@ function update_game_status(message)
             document.getElementById("action-panel-end_turn_button").disabled = true;
         }
 
+        let players_actions = document.getElementsByClassName("action_image");
+        for (var i = 0; i < players_actions.length; i++)
+        {
+            let player_id = players_actions[i].dataset.actionid;
+            let action_num = players_actions[i].dataset.actionnum;
+            let state = message['players_actions'][player_id][action_num];
+            let exp = 'static/images/';
+
+            if(state == true)
+            {
+                exp += action_num.toString() + "_positive.png";
+            }else
+            {
+                exp += action_num.toString() + "_negative.png";
+            }
+
+            players_actions[i].src = exp;
+        }
+
     }
     else
     {
@@ -43,7 +62,7 @@ function update_game_status(message)
 
 function get_request(url, callback)
 {
-    var xmlHttp = new XMLHttpRequest();
+    let xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(JSON.parse(xmlHttp.responseText));

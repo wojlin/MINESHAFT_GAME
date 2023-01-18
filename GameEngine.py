@@ -27,6 +27,7 @@ class GameEngine:
         self.SABOTEUR_AMOUNT = self.__assign_saboteurs_amount()
         self.CARDS_PER_PLAYER_AMOUNT = self.__assign_card_amount_per_player()
 
+        self.__assign_player_actions()
         self.__assign_player_roles()
         self.__assign_card_amount_per_player()
 
@@ -38,6 +39,10 @@ class GameEngine:
 
         self.round = 1
         self.ROUNDS_AMOUNT = 3
+
+    def __assign_player_actions(self):
+        for player_id, player_obj in self.players.items():
+            player_obj.add_actions(self.ACTION_CARDS_TYPES_AMOUNT)
 
     def __assign_player_roles(self):
         for player_id, player_obj in self.players.items():

@@ -85,7 +85,7 @@ body
     background: var(--background-panel);
 }
 
-.player-panel
+.players-panel
 {
     width:100%;
     border: solid 0.3vh var(--border-color);
@@ -96,17 +96,36 @@ body
 }
 
 
-.player-panel-turn {
+.players-panel_turn {
   position: absolute;
   top:50%;
-  left: -3vh;
-  border-top: 2vh solid transparent;
-  border-bottom: 2vh solid transparent;
-  border-left: 3vh solid var(--border-color);
+  left: -4.1vh;
+  border-top: 3vh solid transparent;
+  border-bottom: 3vh solid transparent;
+  border-left: 4vh solid var(--border-color);
   transform: translate(0,-50%);
   visibility: hidden;
 }
 
+.players-panel_turn_actions
+{
+    margin:auto;
+    width:90%;
+    margin-top:1vh;
+    border-spacing:1vh;
+}
+
+.players-panel_turn_actions_action
+{
+    max-width:100%;
+    white-space:nowrap;
+}
+
+.players-panel_turn_actions_action > img
+{
+    width:100%;
+    border: 0.3vh solid var(--border-color);
+}
 
 #player-turn
 {

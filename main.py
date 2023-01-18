@@ -100,10 +100,15 @@ class GameHandler(object):
 
         game = self.games[data["game_id"]]
 
+        players_actions = {}
+        for player_id, player_obj in game.players.items():
+            players_actions[player_id] = player_obj.player_actions
+
         return {"message_type": "game_status_data",
                 "game_turn": game.turn,
                 "cards_left": len(game.cards),
-                "game_round": game.round}
+                "game_round": game.round,
+                "players_actions": players_actions}
 
 
 if __name__ == "__main__":
