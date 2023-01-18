@@ -123,9 +123,11 @@ body
 	bottom: 0;
 	border-right: 0.5vh solid var(--border-color);
 	width: 15%;
+	max-width:27vh;
 	padding-left:2vh;
 	padding-right:2vh;
 	background: var(--background-panel);
+	font-size: 2vh;
 }
 
 #action-panel-bottom
@@ -210,20 +212,61 @@ body
 
 .action-panel-player-cards-table-cell {
 	border: solid 0.2vh var(--border-color);
-	width: 8vh;
-	height: 8vh;
+	width: 10vh;
+	height: 10vh;
 	display: table-cell;
+	position:relative;
+}
+
+.action-panel-player-cards-table-cell > p
+{
+     font-size: 5vh;
+     line-height: 5vh;
+     text-align:center;
+}
+
+.action-panel-player-cards-table-cell > img
+{
+     position:absolute;
+     left:0;
+     top:0;
+     right:0;
+     bottom:0;
 }
 
 #action-panel-cards_deck
 {
     border: solid 0.2vh var(--border-color);
-	width: 8vh;
-	height: 8vh;
+	width: 10vh;
+	height: 10vh;
 	margin:auto;
 	marin-top:2vh;
 	margin-bottom:2vh;
-	font-size:7vh;
-	line-height:7vh;
+	font-size:9vh;
+	line-height:9vh;
 	text-align:center;
+}
+
+#cards-panel
+{
+    border-top: 0.3vh solid var(--border-color);
+    margin-top: 1vh;
+    padding-bottom:2vh;
+    padding-top:2vh;
+}
+
+#player-info-panel
+{
+    border-top: 0.3vh solid var(--border-color);
+    margin-top: 1vh;
+    padding-bottom:2vh;
+    padding-top:2vh;
+
+}
+
+.player-info-panel-cards-title
+{
+    text-align:center;
+    margin-top:2vh;
+    font-size:3vh;
 }

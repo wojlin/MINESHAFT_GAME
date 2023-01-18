@@ -9,24 +9,30 @@
         <p id="data-player_id">{{player_id}}</p>
     </div>
     <div id="action-panel">
-        <table>
-            <tr>
-                <td>your name:</td><td>{{game.players[player_id].player_name}}</td>
-            </tr>
-            <tr>
-                <td>your role:</td><td>{{game.players[player_id].player_role}}</td>
-            </tr>
-        </table>
-        <div id="action-panel-cards_deck">?</div>
-        <table class="action-panel-player-cards-table">
+
+        <div id="cards-panel">
+            <div id="action-panel-cards_deck">?</div>
+        </div>
+        <div id="player-info-panel">
+            <table>
+                <tr>
+                    <td>your name</td><td> : </td><td>{{game.players[player_id].player_name}}</td>
+                </tr>
+                <tr>
+                    <td>your role</td><td> : </td><td style="color:{{'green' if game.players[player_id].player_role == game.GOOD_PLAYER else 'red'}};">{{game.players[player_id].player_role}}</td>
+                </tr>
+            </table>
+            <p class="player-info-panel-cards-title">cards:</p>
+            <table class="action-panel-player-cards-table">
             {% for x in range((game.CARDS_PER_PLAYER_AMOUNT / 2) | int) %}
             <tr>
-                {% for x in range(2) %}
-                <td class="action-panel-player-cards-table-cell">card {{x}}</td>
+                {% for y in range(2) %}
+                <td class="action-panel-player-cards-table-cell"><img  id="card_slot_{{(x+1)*(y+1)}}" src="" alt="" /><p>x</p></td>
                 {% endfor %}
             </tr>
             {% endfor %}
         </table>
+        </div>
         <div id="action-panel-bottom">
             <div id="player-turn"><p><span id="player-turn-text">{{game.players[game.turn].player_name}}</span><span id="player-turn-loading"> turn</span></p></div>
         <button id="action-panel-end_turn_button" onclick="end_turn('{{game.game_id}}','{{player_id}}');" disabled>end turn</button>
