@@ -13,6 +13,12 @@
             <p>round <span id="action-panel-round_panel-round_text">{{game.round}}</span> / <span>{{game.ROUNDS_AMOUNT}}</span></p>
         </div>
         <div id="cards-panel">
+            <div class='trash_box' id="action-panel_trash-container">
+                <span class="trash trash_box">
+                    <span class="trash_box"></span>
+                    <i class="trash_box"></i>
+                </span>
+            </div>
             <div id="action-panel-cards_deck">?</div>
             <table>
                 <tr>
@@ -46,11 +52,13 @@
         </div>
     </div>
     <div id="board">
-        <img id="board-background" src="{{ url_for('static', filename='images/background.png') }}" alt=""/>
+        <img id="board-background" src="{{url_for('static', filename='images/background.png')}}" alt=""/>
         {% for x in range(game.BOARD_SIZE_X) %}
         <div class="row">
         {% for y in range(game.BOARD_SIZE_Y) %}
-            <div id="cell_{{x}}_{{y}}" class="cell">
+            <div id="cell_{{x}}_{{y}}_cell" class="cell">
+                <img id="cell_{{x}}_{{y}}_img" class="cell cell_img" src="{{ url_for('static', filename= 'images/empty.png')}}" alt=""/>
+                <img id="cell_{{x}}_{{y}}_dummy" class="cell cell_dummy" src="{{ url_for('static', filename= 'images/empty.png')}}" alt=""/>
                 <p class="cell-label">x:{{x}} y:{{y}}</p>
             </div>
             {% endfor %}
@@ -65,7 +73,7 @@
                 <table class="players-panel_turn_actions">
                     <tr>
                         {% for action_number in range(game.ACTION_CARDS_TYPES_AMOUNT) %}
-                            <td class="players-panel_turn_actions_action"><img data-actionnum="{{action_number}}" data-actionid="{{game.players[player].player_id}}"  class="action_image" src="{{ url_for('static', filename= 'images/' + (action_number) | string + '_positive.png') }}" alt=""/></td>
+                            <td class="players-panel_turn_actions_action"><img class="action_image_dummy" src="{{ url_for('static', filename= 'images/empty.png')}}" alt=""/><img data-actionnum="{{action_number}}" class='action_image' data-actionid="{{game.players[player].player_id}}"  src="{{ url_for('static', filename= 'images/' + (action_number) | string + '_positive.png') }}" alt=""/></td>
                         {% endfor %}
                     </tr>
                 </table>
@@ -75,8 +83,15 @@
     <script>
         document.getElementById("board").style.gridTemplateColumns = "repeat({{game.BOARD_SIZE_X}}, 1fr)";
         document.getElementById("players-panel").style.gridTemplateRows = "repeat({{game.players|length}}, 1fr)";
-        document.getElementById("board").style.height = "90vh";
-        document.getElementById("board").style.width = "{{(90 / game.BOARD_SIZE_Y) * game.BOARD_SIZE_X}}vh";
+
+        let total_width = window.innerWidth;
+        console.log(total_width);
+        let basic_size = 90;
+        let basic_size_px = 1920;
+        basic_size = (window.innerWidth * basic_size) / basic_size_px;
+
+        document.getElementById("board").style.height = basic_size.toString() + "vh";
+        document.getElementById("board").style.width = ((basic_size / {{game.BOARD_SIZE_Y}}) * {{game.BOARD_SIZE_X}}).toString() + "vh";
         document.getElementById("players_{{game.turn}}_turn").style.visibility = "visible";
 
         setInterval(function(){fetch_game_status("{{game.game_id}}")}, 1000);

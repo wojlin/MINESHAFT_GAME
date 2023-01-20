@@ -119,6 +119,7 @@ body
 {
     max-width:100%;
     white-space:nowrap;
+    position:relative;
 }
 
 .players-panel_turn_actions_action > img
@@ -237,6 +238,7 @@ body
 	height: 10vh;
 	display: table-cell;
 	position:relative;
+	cursor: pointer;
 }
 
 .action-panel-player-cards-table-cell > p
@@ -299,6 +301,7 @@ body
     margin-top: 1vh;
     padding-bottom:2vh;
     padding-top:2vh;
+    position: relative;
 }
 
 #player-info-panel
@@ -327,4 +330,133 @@ body
     background-size: 100% 100% !important;
     transform: translate(-50%,-50%) !important;
     pointer-events: none;
+}
+
+#action-panel_trash-container
+{
+    right:1vh;
+    top:45%;
+    transform: translate(0,-50%);
+    position: absolute;
+	display: flex;
+	align-items: center;
+}
+
+.trash {
+	background:#ff6873;
+	width: 5vh;
+	height: 6vh;
+	display: inline-block;
+	margin:0 auto;
+
+	position: relative;
+	-webkit-border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-moz-border-radius-bottomleft: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+.trash:after {
+	position: absolute;
+	left: -2vh;
+	right: 0vh;
+	bottom: -1vh;
+	width: 3vh;
+}
+.trash span {
+	position: absolute;
+	height: 0.8vh;
+	background: #ff6873;
+	top: -1.2vh;
+	left: -0.5vh;
+	right: -0.5vh;
+	border-top-left-radius: 1vh;
+	border-top-right-radius: 1vh;
+	transform: rotate(0deg);
+	transition: transform 250ms;
+	transform-origin: 19% 100%;
+}
+
+.trash span:after {
+	content: '';
+	position: absolute;
+	width: 3vh;
+	height: 0.8vh;
+	background: #ff6873;
+	top: -1vh;
+
+	border-top-left-radius: 1vh;
+	border-top-right-radius: 1vh;
+	transform: rotate(0deg);
+	transition: transform 250ms;
+	transform-origin: 19% 100%;
+	left: 1.7vh;
+}
+
+
+.trash i {
+	position:relative;
+	width: 0.5vh;
+	height:5vh;
+	background:#fff;
+	display:block;
+	margin: auto;
+	border-radius: 0.5vh;
+	margin-top: 0.5vh;
+}
+.trash i:after {
+	content: '';
+	width:  0.5vh;
+	height: 5vh;
+	background: #fff;
+	position: absolute;
+	left: -1.5vh;
+	border-radius: 0.5vh;
+}
+.trash i:before {
+	content: '';
+	width: 0.5vh;
+	height: 5vh;
+	background: #fff;
+	position: absolute;
+	right: -1.5vh;
+	border-radius: 0.5vh;
+}
+
+.trash:hover span {
+	transform: rotate(-45deg);
+	transition: transform 250ms;
+}
+
+.cell_img
+{
+    width:100%;
+    height:100%;
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+
+.cell_dummy
+{
+    width:100%;
+    height:100%;
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+
+.action_image_dummy
+{
+    width: 100%;
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
 }
