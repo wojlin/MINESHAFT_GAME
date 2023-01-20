@@ -6,10 +6,7 @@ class Card:
         self.card_type = card_type
         self.picture_url = picture_url
 
-    def info(self):
-        card_vis = ''
-        if self.card_type == self.TUNNEL_TYPE:
-            possible_cards = {"none_none_bottom_left": '╗',
+        self.possible_cards = {"none_none_bottom_left": '╗',
                               "top_none_none_left": '╝',
                               "top_right_none_none": '╚',
                               "none_right_bottom_none": '╔',
@@ -24,8 +21,15 @@ class Card:
                               "top_none_none_none": '╹',
                               "none_right_none_none": '╺',
                               "none_none_bottom_none": '╻',
-                              "none_none_none_left": '╸'}
-            card_vis = f"card visualization: [{possible_cards[self.picture_url[:-4]]}]"
+                              "none_none_none_left": '╸',
+                              "start": '*',
+                              "end": '?',
+                              "empty": ' '}
+
+    def info(self):
+        card_vis = ''
+        if self.card_type == self.TUNNEL_TYPE:
+            card_vis = f"card visualization: [{self.possible_cards[self.picture_url[:-4]]}]"
         elif self.card_type == self.ACTION_TYPE:
             action_type = self.picture_url.split('_')[0]
             points = self.picture_url.split('_')[1][:-4]
@@ -42,6 +46,7 @@ class TunnelCard(Card):
                  way_left: bool,
                  destructible: bool,
                  overwrite: bool,
+                 empty: bool,
                  card_name: str = ""):
 
         self.way_top = way_top
@@ -50,9 +55,13 @@ class TunnelCard(Card):
         self.way_left = way_left
         self.destructible = destructible
         self.overwrite = overwrite
+        self.empty = empty
         self.__card_name = card_name
 
         Card.__init__(self, self.TUNNEL_TYPE, self.__create_filename())
+
+    def symbol(self):
+        return self.possible_cards[self.picture_url[:-4]]
 
     def __create_filename(self):
         if self.__card_name:

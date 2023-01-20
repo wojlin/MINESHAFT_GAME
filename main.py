@@ -5,7 +5,7 @@ import uuid
 import json
 
 import GameEngine
-
+import Cards
 
 class EndpointAction(object):
 
@@ -38,6 +38,11 @@ class GameHandler(object):
 
         for game in self.games:
             print(self.games[game].info())
+            result = self.games[game].check_game_tunnel_card_rules(
+                card=Cards.TunnelCard(False, False, False, True, True, False, False, 'none_none_none_left.png'),
+                pos_x=3,
+                pos_y=4)
+            print(result)
 
     def crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())

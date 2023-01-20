@@ -40,6 +40,49 @@ class GameEngine:
         self.round = 1
         self.ROUNDS_AMOUNT = 3
 
+        self.EMPTY_CARD = Cards.TunnelCard(False, False, False, False, True, True, True, 'empty')
+        self.board = self.__create_game_board()
+
+    def __create_game_board(self):
+        board = [[self.EMPTY_CARD for x in range(self.BOARD_SIZE_X)] for y in range(self.BOARD_SIZE_Y)]
+        board[4][2] = Cards.TunnelCard(way_top=True,
+                                       way_right=True,
+                                       way_bottom=True,
+                                       way_left=True,
+                                       destructible=False,
+                                       overwrite=False,
+                                       empty=False,
+                                       card_name="start")
+
+        board[2][10] = Cards.TunnelCard(way_top=True,
+                                       way_right=True,
+                                       way_bottom=True,
+                                       way_left=True,
+                                       destructible=False,
+                                       overwrite=False,
+                                       empty=False,
+                                       card_name="end")
+
+        board[4][10] = Cards.TunnelCard(way_top=True,
+                                        way_right=True,
+                                        way_bottom=True,
+                                        way_left=True,
+                                        destructible=False,
+                                        overwrite=False,
+                                        empty=False,
+                                        card_name="end")
+
+        board[6][10] = Cards.TunnelCard(way_top=True,
+                                        way_right=True,
+                                        way_bottom=True,
+                                        way_left=True,
+                                        destructible=False,
+                                        overwrite=False,
+                                        empty=False,
+                                        card_name="end")
+
+        return board
+
     def __assign_player_actions(self):
         for player_id, player_obj in self.players.items():
             player_obj.add_actions(self.ACTION_CARDS_TYPES_AMOUNT)
@@ -75,6 +118,7 @@ class GameEngine:
                                               way_bottom=way_bottom,
                                               way_left=way_left,
                                               destructible=True,
+                                              empty=False,
                                               overwrite=False))
 
         for i in range(self.INITIAL_ACTION_CARDS_AMOUNT):
@@ -110,6 +154,75 @@ class Game(GameEngine):
         else:
             return {"message_type": "status", "message_content": "game can be created"}
 
+    def check_game_tunnel_card_rules(self, card: Cards.TunnelCard, pos_x, pos_y):
+
+        if type(pos_x) != int or type(pos_y) != int:
+            return False
+        if pos_x < 0 or pos_y < 0:
+            return False
+        if pos_x > len(self.board[0]) - 1 or pos_y > len(self.board) - 1:
+            return False
+
+        place = self.board[pos_y][pos_x]
+
+        if place.empty is not True and card.overwrite is False:
+            return False
+        if place.empty is not True and place.destructible is False:
+            return False
+
+        test_card_top = None
+        test_card_right = None
+        test_card_bottom = None
+        test_card_left = None
+
+        if pos_y - 1 < 0:
+            test_card_top = self.EMPTY_CARD
+        if pos_y > len(self.board[0]) - 1:
+            test_card_bottom = self.EMPTY_CARD
+        if pos_x - 1 < 0:
+            test_card_left = self.EMPTY_CARD
+        if pos_x > len(self.board) - 1:
+            test_card_right = self.EMPTY_CARD
+
+        if test_card_top is None:
+            test_card_top = self.board[pos_y - 1][pos_x]
+        if test_card_right is None:
+            test_card_right = self.board[pos_y][pos_x + 1]
+        if test_card_bottom is None:
+            test_card_bottom = self.board[pos_y + 1][pos_x]
+        if test_card_left is None:
+            test_card_left = self.board[pos_y][pos_x - 1]
+
+        top_side = test_card_top
+        right_side = test_card_right
+        bottom_side = test_card_bottom
+        left_side = test_card_left
+
+        print(f"top: {top_side.symbol()}")
+        print(f"right: {right_side.symbol()}")
+        print(f"bottom: {bottom_side.symbol()}")
+        print(f"left: {left_side.symbol()}")
+
+        if card.way_top and not top_side.way_bottom and not top_side.empty:
+            return False
+        if card.way_right and not right_side.way_left and not top_side.empty:
+            return False
+        if card.way_bottom and not bottom_side.way_top and not top_side.empty:
+            return False
+        if card.way_left and not left_side.way_right and not top_side.empty:
+            return False
+
+        if not card.way_top and top_side.way_bottom and not top_side.empty:
+            return False
+        if not card.way_right and right_side.way_left and not top_side.empty:
+            return False
+        if not card.way_bottom and bottom_side.way_top and not top_side.empty:
+            return False
+        if not card.way_left and left_side.way_right and not top_side.empty:
+            return False
+
+        return True
+
     def info(self):
         info_str = f"uuid: {self.game_id}\n" \
                    f"name: {self.name}\n"
@@ -120,6 +233,15 @@ class Game(GameEngine):
 
         for card in self.cards:
             info_str += card.info() + '\n'
+
+        info_str += f"board:\n[\n"
+        for y in range(len(self.board)):
+            info_str += '['
+            for x in range(len(self.board[y])):
+                info_str += f"[{self.board[y][x].symbol()}]"
+            info_str += ']\n'
+
+        info_str += f"]\n"
 
         info_str += f"players:\n[\n"
 
