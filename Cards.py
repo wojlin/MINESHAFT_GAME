@@ -24,7 +24,10 @@ class Card:
                               "none_none_none_left": '╸',
                               "start": '*',
                               "end": '?',
-                              "empty": ' '}
+                              "empty": ' ',
+                              "false": '-',
+                              "true": '+',
+                              "objective": '?'}
 
     def info(self):
         card_vis = ''
@@ -57,6 +60,10 @@ class TunnelCard(Card):
         self.overwrite = overwrite
         self.empty = empty
         self.__card_name = card_name
+
+        if self.__card_name == "false" or self.__card_name == "true":
+            self.end_card = True
+            self.__card_name = "objective"
 
         Card.__init__(self, self.TUNNEL_TYPE, self.__create_filename())
 

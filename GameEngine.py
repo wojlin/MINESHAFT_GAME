@@ -61,7 +61,7 @@ class GameEngine:
                                        destructible=False,
                                        overwrite=False,
                                        empty=False,
-                                       card_name="end")
+                                       card_name="false")
 
         board[4][10] = Cards.TunnelCard(way_top=True,
                                         way_right=True,
@@ -70,7 +70,7 @@ class GameEngine:
                                         destructible=False,
                                         overwrite=False,
                                         empty=False,
-                                        card_name="end")
+                                        card_name="true")
 
         board[6][10] = Cards.TunnelCard(way_top=True,
                                         way_right=True,
@@ -79,7 +79,7 @@ class GameEngine:
                                         destructible=False,
                                         overwrite=False,
                                         empty=False,
-                                        card_name="end")
+                                        card_name="false")
 
         return board
 

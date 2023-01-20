@@ -113,7 +113,8 @@ class GameHandler(object):
                 "game_turn": game.turn,
                 "cards_left": len(game.cards),
                 "game_round": game.round,
-                "players_actions": players_actions}
+                "players_actions": players_actions,
+                "board":[[game.board[y][x].picture_url for x in range(game.BOARD_SIZE_X)] for y in range(game.BOARD_SIZE_Y)]}
 
 
 if __name__ == "__main__":

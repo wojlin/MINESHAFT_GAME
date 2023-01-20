@@ -53,6 +53,14 @@ function update_game_status(message)
             players_actions[i].src = exp;
         }
 
+        let cells = document.getElementsByClassName("cell_img");
+        Array.prototype.forEach.call(cells, function(cell) {
+            cell_id = cell.id;
+            cell_x = parseInt(cell_id.split('_')[1]);
+            cell_y = parseInt(cell_id.split('_')[2]);
+            cell.src = "static/images/" + message['board'][cell_y][cell_x];
+        });
+
     }
     else
     {
