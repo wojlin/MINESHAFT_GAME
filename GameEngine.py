@@ -78,7 +78,7 @@ class GameEngine:
                                               overwrite=False))
 
         for i in range(self.INITIAL_ACTION_CARDS_AMOUNT):
-            action_type = str(random.randint(1, self.ACTION_CARDS_TYPES_AMOUNT))
+            action_type = str(random.randint(0, self.ACTION_CARDS_TYPES_AMOUNT - 1))
             action_effect = bool(random.getrandbits(1))
             card_deck.append(Cards.ActionCard(action_type=action_type, is_positive_effect=action_effect))
 

@@ -10,7 +10,7 @@ function update_game_status(message)
         show_message(message["message"])
     }else if(message["message_type"] == "game_status_data")
     {
-        console.log("fetched game status...")
+        //console.log("fetched game status...")
 
         let arrows = document.getElementsByClassName("player-panel-turn");
         for (var i = 0; i < arrows.length; i++) {
