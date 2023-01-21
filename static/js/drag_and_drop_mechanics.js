@@ -7,6 +7,13 @@ let phantomPlaceholderSize = document.getElementsByClassName("action-panel-playe
 
 let halfPhantomSize = phantomSize / 2;
 
+let currentCell = null;
+
+function isMoveCorrect()
+{
+    return true;
+}
+
 document.addEventListener('click',(event) => {
     let obj = event.target;
     if(obj.className == "player-card-img")
@@ -25,7 +32,13 @@ document.addEventListener('click',(event) => {
         {
             console.log("card placed on cell:");
             console.log(obj);
-            removePhantomCard(obj);
+            if(isMoveCorrect())
+            {
+                removePhantomCard(obj);
+            }else
+            {
+            
+            }
         }
     }
     else if(obj.classList.contains("action_image_dummy"))
@@ -98,6 +111,11 @@ function cardMove(e)
             moveObject.style.width = phantomSize.toString() + 'px';
             moveObject.style.height = phantomSize.toString() + 'px';
             document.body.style.setProperty('cursor', 'pointer');
+            if(currentCell != current_element)
+            {
+                isMoveCorrect();
+                currentCell = current_element;
+            }
         }
         else if(current_element.classList.contains("action_image_dummy"))
         {

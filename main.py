@@ -53,6 +53,7 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
         self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
         self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)
+        self.add_endpoint(endpoint='/game/is_move_correct', endpoint_name='is move correct', handler=self.is_move_correct)
 
     def run_api(self):
         self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
@@ -95,6 +96,46 @@ class GameHandler(object):
         print(game.end_turn())
 
         return {"message_type": "info", "message": f"you ended turn!"}
+
+    def is_move_correct(self, data):
+        try:
+            if "game_id" not in data or "player_id" not in data:
+                return {"message_type": "error", "message": "game parameters not exist in request"}
+
+            if "card" not in data:
+                return {"message_type": "error", "message": "no tunnel card specified"}
+
+            if data["game_id"] not in self.games:
+                return {"message_type": "error", "message": "game not found"}
+
+            game = self.games[data["game_id"]]
+
+            if data["player_id"] not in game.players:
+                return {"message_type": "error", "message": "player not found"}
+
+            way_top = data["card"]["card_directions"]["top"]
+            way_right = data["card"]["card_directions"]["right"]
+            way_bottom = data["card"]["card_directions"]["bottom"]
+            way_left = data["card"]["card_directions"]["left"]
+            destructible = data["card"]["destructible"]
+            overwrite = data["card"]["overwrite"]
+
+            card = Cards.TunnelCard(way_top=way_top,
+                                    way_right=way_right,
+                                    way_bottom=way_bottom,
+                                    way_left=way_left,
+                                    destructible=destructible,
+                                    overwrite=overwrite,
+                                    empty=False)
+
+            isValidMove = game.check_game_tunnel_card_rules(card=card, pos_x=data["pos_x"], pos_y=data["pos_y"])
+            if isValidMove:
+                return {"message_type": "game_status_data", "message": True}
+            else:
+                return {"message_type": "game_status_data", "message": False}
+            
+        except Exception as e:
+            return {"message_type": "error", "message": f"unexpected error: {e}"}
 
     def fetch_game_status(self, data):
         if "game_id" not in data:
