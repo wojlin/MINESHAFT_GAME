@@ -7,27 +7,27 @@ class Card:
         self.picture_url = picture_url
 
         self.possible_cards = {"none_none_bottom_left": '╗',
-                              "top_none_none_left": '╝',
-                              "top_right_none_none": '╚',
-                              "none_right_bottom_none": '╔',
-                              "none_none_none_none": '╳',
-                              "top_right_bottom_left": '╬',
-                              "top_right_bottom_none": '╠',
-                              "top_none_bottom_left": '╣',
-                              "top_right_none_left": '╩',
-                              "none_right_bottom_left": '╦',
-                              "top_none_bottom_none": '║',
-                              "none_right_none_left": '═',
-                              "top_none_none_none": '╹',
-                              "none_right_none_none": '╺',
-                              "none_none_bottom_none": '╻',
-                              "none_none_none_left": '╸',
-                              "start": '*',
-                              "end": '?',
-                              "empty": ' ',
-                              "false": '-',
-                              "true": '+',
-                              "objective": '?'}
+                               "top_none_none_left": '╝',
+                               "top_right_none_none": '╚',
+                               "none_right_bottom_none": '╔',
+                               "none_none_none_none": '╳',
+                               "top_right_bottom_left": '╬',
+                               "top_right_bottom_none": '╠',
+                               "top_none_bottom_left": '╣',
+                               "top_right_none_left": '╩',
+                               "none_right_bottom_left": '╦',
+                               "top_none_bottom_none": '║',
+                               "none_right_none_left": '═',
+                               "top_none_none_none": '╹',
+                               "none_right_none_none": '╺',
+                               "none_none_bottom_none": '╻',
+                               "none_none_none_left": '╸',
+                               "start": '*',
+                               "end": '?',
+                               "empty": ' ',
+                               "false": '-',
+                               "true": '+',
+                               "objective": '?'}
 
     def info(self):
         card_vis = ''
@@ -60,6 +60,15 @@ class TunnelCard(Card):
         self.overwrite = overwrite
         self.empty = empty
         self.__card_name = card_name
+        self.card_info = {"card_directions":
+                              {"way_top": self.way_top,
+                               "way_right": self.way_right,
+                               "way_bottom": self.way_bottom,
+                                "way_left": self.way_left
+                               },
+                          "destructible": self.destructible,
+                          "overwrite": self.overwrite,
+                          "card_type": "tunnel"}
 
         if self.__card_name == "false" or self.__card_name == "true":
             self.end_card = True
@@ -90,4 +99,3 @@ class ActionCard(Card):
 
     def __create_filename(self):
         return f"{self.action_type}_{'positive' if self.is_positive_effect else 'negative'}.png"
-

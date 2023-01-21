@@ -205,20 +205,20 @@ class Game(GameEngine):
 
         if card.way_top and not top_side.way_bottom and not top_side.empty:
             return False
-        if card.way_right and not right_side.way_left and not top_side.empty:
+        if card.way_right and not right_side.way_left and not right_side.empty:
             return False
-        if card.way_bottom and not bottom_side.way_top and not top_side.empty:
+        if card.way_bottom and not bottom_side.way_top and not bottom_side.empty:
             return False
-        if card.way_left and not left_side.way_right and not top_side.empty:
+        if card.way_left and not left_side.way_right and not left_side.empty:
             return False
 
         if not card.way_top and top_side.way_bottom and not top_side.empty:
             return False
-        if not card.way_right and right_side.way_left and not top_side.empty:
+        if not card.way_right and right_side.way_left and not right_side.empty:
             return False
-        if not card.way_bottom and bottom_side.way_top and not top_side.empty:
+        if not card.way_bottom and bottom_side.way_top and not bottom_side.empty:
             return False
-        if not card.way_left and left_side.way_right and not top_side.empty:
+        if not card.way_left and left_side.way_right and not left_side.empty:
             return False
 
         return True

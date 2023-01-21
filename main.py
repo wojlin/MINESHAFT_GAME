@@ -3,6 +3,9 @@ from typing import Dict
 import threading
 import uuid
 import json
+import sys
+import ast
+import os
 
 import GameEngine
 import Cards
@@ -113,12 +116,19 @@ class GameHandler(object):
             if data["player_id"] not in game.players:
                 return {"message_type": "error", "message": "player not found"}
 
-            way_top = data["card"]["card_directions"]["top"]
-            way_right = data["card"]["card_directions"]["right"]
-            way_bottom = data["card"]["card_directions"]["bottom"]
-            way_left = data["card"]["card_directions"]["left"]
-            destructible = data["card"]["destructible"]
-            overwrite = data["card"]["overwrite"]
+            card_info = ast.literal_eval(json.loads(data["card"]))
+
+            if card_info["card_type"] != "tunnel":
+                return {"message_type": "error", "message": "wrong card type"}
+
+            way_top = card_info["card_directions"]["way_top"]
+            way_right = card_info["card_directions"]["way_right"]
+            way_bottom = card_info["card_directions"]["way_bottom"]
+            way_left = card_info["card_directions"]["way_left"]
+            destructible = card_info["destructible"]
+            overwrite = card_info["overwrite"]
+            pos_x = int(data["pos_x"])
+            pos_y = int(data["pos_y"])
 
             card = Cards.TunnelCard(way_top=way_top,
                                     way_right=way_right,
@@ -128,14 +138,18 @@ class GameHandler(object):
                                     overwrite=overwrite,
                                     empty=False)
 
-            isValidMove = game.check_game_tunnel_card_rules(card=card, pos_x=data["pos_x"], pos_y=data["pos_y"])
+            isValidMove = game.check_game_tunnel_card_rules(card=card, pos_x=pos_x, pos_y=pos_y)
+
             if isValidMove:
                 return {"message_type": "game_status_data", "message": True}
             else:
                 return {"message_type": "game_status_data", "message": False}
-            
+
         except Exception as e:
-            return {"message_type": "error", "message": f"unexpected error: {e}"}
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            error = f"{exc_type}\n{fname}\n{exc_tb.tb_lineno}"
+            return {"message_type": "error", "message": f"unexpected error: {error}"}
 
     def fetch_game_status(self, data):
         if "game_id" not in data:

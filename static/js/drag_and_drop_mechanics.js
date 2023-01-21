@@ -9,9 +9,40 @@ let halfPhantomSize = phantomSize / 2;
 
 let currentCell = null;
 
-function isMoveCorrect()
+function showCorrectInfo(message)
 {
-    return true;
+    if(message["message_type"] == "error")
+    {
+        document.getElementById("phantomCardTint").style.background = "red"; // colorize red
+        show_message(message["message"]);
+    }
+    else if(message["message_type"] == "game_status_data")
+    {
+        if(message["message"] == true)
+        {
+            document.getElementById("phantomCardTint").style.background = "green"; // colorize green
+        }
+        else
+        {
+            document.getElementById("phantomCardTint").style.background = "red"; // colorize red
+        }
+    }
+    else
+    {
+        document.getElementById("phantomCardTint").style.background = "red"; // colorize red
+        show_message("unexpected error!\nrequest content:\n"+message);
+    }
+}
+
+function isMoveCorrect(current_element)
+{
+    let vars = "?";
+    vars += "game_id=" + document.getElementById("data-game_id").innerHTML;
+    vars += "&player_id=" + document.getElementById("data-player_id").innerHTML;
+    vars += "&card=\"" + placeholderObj.dataset.info + "\"";
+    vars += "&pos_x=" + current_element.id.split("_")[1];
+    vars += "&pos_y=" + current_element.id.split("_")[2];
+    get_request('game/is_move_correct' + vars, showCorrectInfo);
 }
 
 document.addEventListener('click',(event) => {
@@ -32,13 +63,7 @@ document.addEventListener('click',(event) => {
         {
             console.log("card placed on cell:");
             console.log(obj);
-            if(isMoveCorrect())
-            {
-                removePhantomCard(obj);
-            }else
-            {
-            
-            }
+            removePhantomCard(obj);
         }
     }
     else if(obj.classList.contains("action_image_dummy"))
@@ -86,6 +111,12 @@ function createPhantomCard(obj, src)
 {
     placeholderObj = obj;
     moveObject = document.createElement("div");
+    let tintObject = document.createElement("div");
+    tintObject.id = "phantomCardTint";
+    tintObject.classList.add('moveObjectTint');
+    tintObject.style.width = phantomSize.toString() + "px";
+    tintObject.style.height = phantomSize.toString() + "px";
+    moveObject.appendChild(tintObject);
     moveObject.id = "phantomCard";
     moveObject.classList.add('moveObject');
     moveObject.style.background = "url("+src+")";
@@ -113,7 +144,7 @@ function cardMove(e)
             document.body.style.setProperty('cursor', 'pointer');
             if(currentCell != current_element)
             {
-                isMoveCorrect();
+                isMoveCorrect(current_element);
                 currentCell = current_element;
             }
         }

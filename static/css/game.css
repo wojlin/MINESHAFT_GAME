@@ -332,6 +332,23 @@ body
     pointer-events: none;
 }
 
+
+.moveObjectTint
+{
+    width:5vh;
+    height:5vh;
+    background:white;
+    position:absolute;
+    background-repeat: no-repeat !important;
+    background-size: 100% 100% !important;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    pointer-events: none;
+    opacity:0.4;
+}
+
 #action-panel_trash-container
 {
     right:1vh;

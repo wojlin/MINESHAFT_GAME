@@ -6,6 +6,7 @@
 </head>
 <body onmousemove="cardMove(event)">
     <div id="data">
+        <p id="data-game_id">{{game.game_id}}</p>
         <p id="data-player_id">{{player_id}}</p>
     </div>
     <div id="action-panel">
@@ -40,7 +41,7 @@
             {% for x in range((game.CARDS_PER_PLAYER_AMOUNT / 2) | int) %}
             <tr>
                 {% for y in range(2) %}
-                <td class="action-panel-player-cards-table-cell"><img class="player-card-img" id="card_slot_{{(x+1)*(y+1)}}" src="{{ url_for('static', filename='images/' + game.players[player_id].player_cards[((x+1)*(y+1) - 1) | int].picture_url)}}" alt="" /><p>x</p></td>
+                <td class="action-panel-player-cards-table-cell"><img data-info="{{game.players[player_id].player_cards[((x+1)*(y+1) - 1) | int].card_info}}" class="player-card-img" id="card_slot_{{(x+1)*(y+1)}}" src="{{ url_for('static', filename='images/' + game.players[player_id].player_cards[((x+1)*(y+1) - 1) | int].picture_url)}}" alt="" /><p>x</p></td>
                 {% endfor %}
             </tr>
             {% endfor %}
