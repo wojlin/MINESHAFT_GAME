@@ -477,3 +477,9 @@ body
     top:0;
     bottom:0;
 }
+
+.move_disabled
+{
+    pointer-events:none;
+    opacity:0.2;
+}

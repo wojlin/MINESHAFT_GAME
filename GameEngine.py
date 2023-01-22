@@ -167,8 +167,11 @@ class Game(GameEngine):
 
         if place.empty is not True and card.overwrite is False:
             return False
-        if place.empty is not True and place.destructible is False:
+        if place.empty is not True and place.destructible is False and card.overwrite is False:
             return False
+
+        if place.empty is not True and place.destructible is True and card.overwrite is True:
+            return True
 
         test_card_top = None
         test_card_right = None
@@ -177,11 +180,11 @@ class Game(GameEngine):
 
         if pos_y - 1 < 0:
             test_card_top = self.EMPTY_CARD
-        if pos_y > len(self.board[0]) - 1:
+        if pos_y >= len(self.board) - 1:
             test_card_bottom = self.EMPTY_CARD
         if pos_x - 1 < 0:
             test_card_left = self.EMPTY_CARD
-        if pos_x > len(self.board) - 1:
+        if pos_x >= len(self.board[0]) - 1:
             test_card_right = self.EMPTY_CARD
 
         if test_card_top is None:
@@ -198,10 +201,13 @@ class Game(GameEngine):
         bottom_side = test_card_bottom
         left_side = test_card_left
 
-        print(f"top: {top_side.symbol()}")
-        print(f"right: {right_side.symbol()}")
-        print(f"bottom: {bottom_side.symbol()}")
-        print(f"left: {left_side.symbol()}")
+        #print(f"top: {top_side.symbol()}")
+        #print(f"right: {right_side.symbol()}")
+        #print(f"bottom: {bottom_side.symbol()}")
+        #print(f"left: {left_side.symbol()}")
+
+        if top_side.empty and right_side.empty and bottom_side.empty and left_side.empty:
+            return False
 
         if card.way_top and not top_side.way_bottom and not top_side.empty:
             return False

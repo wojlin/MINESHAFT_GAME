@@ -95,9 +95,12 @@
         document.getElementById("board").style.width = ((basic_size / {{game.BOARD_SIZE_Y}}) * {{game.BOARD_SIZE_X}}).toString() + "vh";
         document.getElementById("players_{{game.turn}}_turn").style.visibility = "visible";
 
+
+
         setInterval(function(){fetch_game_status("{{game.game_id}}")}, 1000);
 
     </script>
+    <script src="{{url_for('static', filename='js/game_mechanics.js')}}"></script>
     <script src="{{url_for('static', filename='js/drag_and_drop_mechanics.js')}}"></script>
     <script src="{{url_for('static', filename='js/game.js')}}"></script>
 </body>

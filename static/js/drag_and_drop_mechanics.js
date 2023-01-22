@@ -9,6 +9,8 @@ let halfPhantomSize = phantomSize / 2;
 
 let currentCell = null;
 
+moveMade = false;
+
 function showCorrectInfo(message)
 {
     if(message["message_type"] == "error")
@@ -34,7 +36,41 @@ function showCorrectInfo(message)
     }
 }
 
-function isMoveCorrect(current_element)
+function placeElement(message)
+{
+    if(message["message_type"] == "error")
+    {
+        return;
+    }
+    if(message["message_type"] != "game_status_data")
+    {
+        return;
+    }
+
+    if(message["message"] != true)
+    {
+        return;
+    }
+
+    moveMade = true;
+    document.getElementById("action-panel-end_turn_button").disabled = false;
+
+    playerMove =
+    {
+     "card": placeholderObj.dataset.info,
+     "move_type": "map",
+     "move_pos":
+         {
+            "x": currentCell.id.split("_")[1],
+            "y":  currentCell.id.split("_")[2]
+         }
+     };
+
+    removePhantomCard(currentCell);
+
+}
+
+function isMoveCorrect(current_element, place=false)
 {
     let vars = "?";
     vars += "game_id=" + document.getElementById("data-game_id").innerHTML;
@@ -42,7 +78,14 @@ function isMoveCorrect(current_element)
     vars += "&card=\"" + placeholderObj.dataset.info + "\"";
     vars += "&pos_x=" + current_element.id.split("_")[1];
     vars += "&pos_y=" + current_element.id.split("_")[2];
-    get_request('game/is_move_correct' + vars, showCorrectInfo);
+    if(!place)
+    {
+        get_request('game/is_move_correct' + vars, showCorrectInfo);
+    }else
+    {
+        get_request('game/is_move_correct' + vars, placeElement);
+    }
+
 }
 
 document.addEventListener('click',(event) => {
@@ -63,7 +106,8 @@ document.addEventListener('click',(event) => {
         {
             console.log("card placed on cell:");
             console.log(obj);
-            removePhantomCard(obj);
+            isMoveCorrect(obj, true);
+
         }
     }
     else if(obj.classList.contains("action_image_dummy"))

@@ -1,3 +1,5 @@
+var playerMove = ""
+
 function show_message(message)
 {
     alert(message["message"])
@@ -28,10 +30,18 @@ function update_game_status(message)
 
         if(document.getElementById("data-player_id").innerHTML == message["game_turn"])
         {
-            document.getElementById("action-panel-end_turn_button").disabled = false;
+            let cards = document.getElementsByClassName("action-panel-player-cards-table-cell");
+            for (var i = 0; i < cards.length; i++) {
+              cards[i].classList.remove("move_disabled");
+            }
+            //document.getElementById("action-panel-end_turn_button").disabled = false;
         }else
         {
-            document.getElementById("action-panel-end_turn_button").disabled = true;
+            let cards = document.getElementsByClassName("action-panel-player-cards-table-cell");
+            for (var i = 0; i < cards.length; i++) {
+              cards[i].classList.add("move_disabled");
+            }
+            //document.getElementById("action-panel-end_turn_button").disabled = true;
         }
 
         let players_actions = document.getElementsByClassName("action_image");
@@ -81,7 +91,10 @@ function get_request(url, callback)
 
 function end_turn(game_id, player_id)
 {
-    get_request("/game/end_turn?game_id="+game_id+"&player_id="+player_id, show_message)
+    vars = "?game_id=" + game_id;
+    vars += "&player_id=" + player_id;
+    vars += "&player_move=" + JSON.stringify(playerMove) + "";
+    get_request("/game/end_turn"+vars, show_message)
 }
 
 
@@ -89,4 +102,6 @@ function fetch_game_status(game_id)
 {
     get_request("/game/fetch_game_status?game_id="+game_id, update_game_status)
 }
+
+//fetch_game_status(document.getElementById("data-game_id").innerHTML);
 

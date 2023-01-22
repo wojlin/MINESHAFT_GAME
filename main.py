@@ -41,11 +41,6 @@ class GameHandler(object):
 
         for game in self.games:
             print(self.games[game].info())
-            result = self.games[game].check_game_tunnel_card_rules(
-                card=Cards.TunnelCard(False, False, False, True, True, False, False, 'none_none_none_left.png'),
-                pos_x=3,
-                pos_y=4)
-            print(result)
 
     def crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
@@ -81,10 +76,13 @@ class GameHandler(object):
 
         return render_template("game.html", game=game, player_id=data["player_id"])
 
-    def end_turn(self, data:dict):
-        if "game_id" not in data or "player_id" not in data:
-            return {"message_type": "error", "message": "game or player parameters not exist in request"}
-
+    def end_turn(self, data: dict):
+        if "game_id" not in data:
+            return {"message_type": "error", "message": "game parameters not exist in request"}
+        if "player_id" not in data:
+            return {"message_type": "error", "message": "player parameters not exist in request"}
+        if "player_move" not in data:
+            return {"message_type": "error", "message": "player move parameters not exist in request"}
         if data["game_id"] not in self.games:
             return {"message_type": "error", "message": "game not found"}
 
@@ -95,6 +93,15 @@ class GameHandler(object):
 
         if data["player_id"] != game.turn:
             return {"message_type": "error", "message": f"you cannot end turn. it's {game.turn} turn"}
+
+        player_move = json.loads(data["player_move"])
+        player_move["card"] = ast.literal_eval(player_move["card"])
+
+        print(player_move)
+
+        # TODO: check if card exist in player card stack
+        # TODO: check if move is valid
+        # TODO: update game map
 
         print(game.end_turn())
 
