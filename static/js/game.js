@@ -9,7 +9,7 @@ function update_game_status(message)
 {
     if(message["message_type"] == "error")
     {
-        show_message(message["message"])
+        show_message(message)
     }else if(message["message_type"] == "game_status_data")
     {
         //console.log("fetched game status...")
@@ -74,7 +74,7 @@ function update_game_status(message)
     }
     else
     {
-        show_message("unexpected error!\nrequest content:\n"+message)
+        show_message({"message":"unexpected error!\nrequest content:\n"+message})
     }
 }
 

@@ -16,7 +16,7 @@ function showCorrectInfo(message)
     if(message["message_type"] == "error")
     {
         document.getElementById("phantomCardTint").style.background = "red"; // colorize red
-        show_message(message["message"]);
+        show_message(message);
     }
     else if(message["message_type"] == "game_status_data")
     {
@@ -32,7 +32,7 @@ function showCorrectInfo(message)
     else
     {
         document.getElementById("phantomCardTint").style.background = "red"; // colorize red
-        show_message("unexpected error!\nrequest content:\n"+message);
+        show_message({"message":"unexpected error!\nrequest content:\n"+message});
     }
 }
 
@@ -40,10 +40,12 @@ function placeElement(message)
 {
     if(message["message_type"] == "error")
     {
+        show_message(message);
         return;
     }
     if(message["message_type"] != "game_status_data")
     {
+        show_message(message);
         return;
     }
 

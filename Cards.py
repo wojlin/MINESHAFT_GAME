@@ -1,10 +1,12 @@
+import uuid
 class Card:
     TUNNEL_TYPE = "Tunnel Card"
     ACTION_TYPE = "Action Card"
 
-    def __init__(self, card_type: str, picture_url: str):
+    def __init__(self, card_type: str, picture_url: str, card_id:str = ''):
         self.card_type = card_type
         self.picture_url = picture_url
+        self.card_id = str(uuid.uuid4()) if card_id == "" else card_id
 
         self.possible_cards = {"none_none_bottom_left": '╗',
                                "top_none_none_left": '╝',
@@ -41,6 +43,9 @@ class Card:
             raise Exception("unknown card type")
         return f"card type: {self.card_type}  {card_vis}"
 
+    def is_card_the_same(self, other):
+        return True if self.card_id == other.card_id else False
+
 
 class TunnelCard(Card):
     def __init__(self, way_top: bool,
@@ -50,7 +55,8 @@ class TunnelCard(Card):
                  destructible: bool,
                  overwrite: bool,
                  empty: bool,
-                 card_name: str = ""):
+                 card_name: str = "",
+                 card_id: str = ""):
 
         self.way_top = way_top
         self.way_right = way_right
@@ -60,21 +66,23 @@ class TunnelCard(Card):
         self.overwrite = overwrite
         self.empty = empty
         self.__card_name = card_name
-        self.card_info = {"card_directions":
-                              {"way_top": self.way_top,
-                               "way_right": self.way_right,
-                               "way_bottom": self.way_bottom,
-                                "way_left": self.way_left
-                               },
-                          "destructible": self.destructible,
-                          "overwrite": self.overwrite,
-                          "card_type": "tunnel"}
 
         if self.__card_name == "false" or self.__card_name == "true":
             self.end_card = True
             self.__card_name = "objective"
 
-        Card.__init__(self, self.TUNNEL_TYPE, self.__create_filename())
+        Card.__init__(self, self.TUNNEL_TYPE, self.__create_filename(), card_id=card_id)
+
+        self.card_info = {"card_directions":
+                              {"way_top": self.way_top,
+                               "way_right": self.way_right,
+                               "way_bottom": self.way_bottom,
+                               "way_left": self.way_left
+                               },
+                          "destructible": self.destructible,
+                          "overwrite": self.overwrite,
+                          "card_type": self.TUNNEL_TYPE,
+                          "card_id": self.card_id}
 
     def symbol(self):
         return self.possible_cards[self.picture_url[:-4]]
@@ -92,10 +100,17 @@ class TunnelCard(Card):
 
 
 class ActionCard(Card):
-    def __init__(self, action_type: str, is_positive_effect: bool):
+    def __init__(self, action_type: str, is_positive_effect: bool, card_id: str =""):
         self.action_type = action_type
         self.is_positive_effect = is_positive_effect
-        Card.__init__(self, self.ACTION_TYPE, self.__create_filename())
+        self.card_id = card_id
+        Card.__init__(self, self.ACTION_TYPE, self.__create_filename(), card_id=card_id)
+
+        self.card_info = {
+                          "action_type": self.action_type,
+                          "is_positive_effect": self.is_positive_effect,
+                          "card_type": self.ACTION_TYPE,
+                          "card_id": self.card_id}
 
     def __create_filename(self):
         return f"{self.action_type}_{'positive' if self.is_positive_effect else 'negative'}.png"
