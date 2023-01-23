@@ -102,7 +102,6 @@ class GameHandler(object):
         raise Exception("incorrect card type")
 
     def end_turn(self, data: dict):
-        print(data)
         if "game_id" not in data:
             return {"message_type": "error", "message": "game parameters not exist in request"}
         if "player_id" not in data:
@@ -124,7 +123,7 @@ class GameHandler(object):
 
         player_move = json.loads(data["player_move"])
         player_move["card"] = ast.literal_eval(player_move["card"])
-
+        data["player_move"] = player_move
 
         card = self.__build_card_from_json(player_move["card"])
 
@@ -136,17 +135,19 @@ class GameHandler(object):
         if card_exist is False:
             return {"message_type": "error", "message": f"you dont have card that you used in your inventory"}
 
-        print(card.card_type)
+        print(data)
         if card.card_type == card.TUNNEL_TYPE:
-            #game.check_game_tunnel_card_rules(card, pos_x=po)
-            pass
+            pos_x = int(data["player_move"]["move_pos"]["x"])
+            pos_y = int(data["player_move"]["move_pos"]["y"])
+            status = game.check_game_tunnel_card_rules(card, pos_x=pos_x, pos_y=pos_y)
+            if status is False:
+                return {"message_type": "error", "message": f"move is not valid"}
+            game.board[pos_y][pos_x] = card
         elif card.card_type == card.ACTION_TYPE:
             # TODO: check game action card rules
             return {"message_type": "error", "message": f"not implemented yet"}
         else:
             raise Exception("incorrect card type")
-
-        # TODO: update game map
 
         print(game.end_turn())
 
