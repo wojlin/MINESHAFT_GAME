@@ -136,7 +136,12 @@ class GameHandler(object):
             return {"message_type": "error", "message": f"you dont have card that you used in your inventory"}
 
         print(data)
-        if card.card_type == card.TUNNEL_TYPE:
+        if data["player_move"]["move_type"] == "trash":
+            for i in range(len(player.player_cards)):
+                if player.player_cards[i].is_card_the_same(card):
+                    player.player_cards.pop(i)
+                    break
+        elif card.card_type == card.TUNNEL_TYPE:
             pos_x = int(data["player_move"]["move_pos"]["x"])
             pos_y = int(data["player_move"]["move_pos"]["y"])
             status = game.check_game_tunnel_card_rules(card, pos_x=pos_x, pos_y=pos_y)
@@ -148,6 +153,8 @@ class GameHandler(object):
             return {"message_type": "error", "message": f"not implemented yet"}
         else:
             raise Exception("incorrect card type")
+
+        game.give_card_from_stack(data["player_id"])
 
         print(game.end_turn())
 

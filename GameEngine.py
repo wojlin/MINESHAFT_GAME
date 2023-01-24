@@ -141,6 +141,10 @@ class Game(GameEngine):
     def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
         GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config)
 
+    def give_card_from_stack(self, player_id):
+        self.players[player_id].player_cards.append(self.cards[-1])
+        self.cards.pop()
+
     def end_turn(self):
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id

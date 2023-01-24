@@ -126,6 +126,16 @@ document.addEventListener('click',(event) => {
         if(selectedCard !=  null)
         {
             console.log("card discarded!");
+
+            playerMove =
+            {
+             "card": placeholderObj.dataset.info,
+             "move_type": "trash"
+             };
+
+             moveMade = true;
+            document.getElementById("action-panel-end_turn_button").disabled = false;
+
             removePhantomCard(null, force_delete=true);
         }
     }
