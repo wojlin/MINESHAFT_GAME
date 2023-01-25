@@ -165,6 +165,9 @@ class GameHandler(object):
             if "game_id" not in data or "player_id" not in data:
                 return {"message_type": "error", "message": "game parameters not exist in request"}
 
+            if "player_id" not in data:
+                return {"message_type": "error", "message": "player parameters not exist in request"}
+
             if "card" not in data:
                 return {"message_type": "error", "message": "no tunnel card specified"}
 
@@ -215,21 +218,30 @@ class GameHandler(object):
         if "game_id" not in data:
             return {"message_type": "error", "message": "game parameters not exist in request"}
 
+        if "player_id" not in data:
+            return {"message_type": "error", "message": "player parameters not exist in request"}
+
         if data["game_id"] not in self.games:
             return {"message_type": "error", "message": "game not found"}
 
         game = self.games[data["game_id"]]
 
+        if data["player_id"] not in game.players:
+            return {"message_type": "error", "message": "player not found"}
+
         players_actions = {}
         for player_id, player_obj in game.players.items():
             players_actions[player_id] = player_obj.player_actions
+
+        player_cards = {f"{card.picture_url}": card.info() for card in game.players[data["player_id"]].player_cards}
 
         return {"message_type": "game_status_data",
                 "game_turn": game.turn,
                 "cards_left": len(game.cards),
                 "game_round": game.round,
                 "players_actions": players_actions,
-                "board":[[game.board[y][x].picture_url for x in range(game.BOARD_SIZE_X)] for y in range(game.BOARD_SIZE_Y)]}
+                "board": [[game.board[y][x].picture_url for x in range(game.BOARD_SIZE_X)] for y in range(game.BOARD_SIZE_Y)],
+                "player_cards": player_cards}
 
 
 if __name__ == "__main__":
