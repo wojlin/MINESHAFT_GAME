@@ -114,13 +114,18 @@ class GameEngine:
             way_right = bool(random.getrandbits(1))
             way_bottom = bool(random.getrandbits(1))
             way_left = bool(random.getrandbits(1))
+            overwrite = False
+            empty = False
+            if way_left is False and way_right is False and way_bottom is False and way_top is False:
+                empty = True
+                overwrite = True
             card_deck.append(Cards.TunnelCard(way_top=way_top,
                                               way_right=way_right,
                                               way_bottom=way_bottom,
                                               way_left=way_left,
                                               destructible=True,
-                                              empty=False,
-                                              overwrite=False))
+                                              empty=empty,
+                                              overwrite=overwrite))
 
         for i in range(self.INITIAL_ACTION_CARDS_AMOUNT):
             action_type = str(random.randint(0, self.ACTION_CARDS_TYPES_AMOUNT - 1))
@@ -180,13 +185,15 @@ class Game(GameEngine):
 
         place = self.board[pos_y][pos_x]
 
-        if place.empty is not True and card.overwrite is False:
+        if place.destructible is True and card.overwrite is True:
+            return True
+
+        if place.empty is False and card.overwrite is False:
             return False
-        if place.empty is not True and place.destructible is False and card.overwrite is False:
+        if place.empty is False and place.destructible is False and card.overwrite is False:
             return False
 
-        if place.empty is not True and place.destructible is True and card.overwrite is True:
-            return True
+
 
         test_card_top = None
         test_card_right = None

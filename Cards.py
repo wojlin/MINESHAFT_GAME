@@ -82,6 +82,7 @@ class TunnelCard(Card):
                                },
                           "destructible": self.destructible,
                           "overwrite": self.overwrite,
+                          "empty": self.empty,
                           "card_type": self.TUNNEL_TYPE,
                           "card_id": self.card_id,
                           "card_url": self.picture_url

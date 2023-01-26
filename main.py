@@ -1,5 +1,5 @@
 import copy
-
+import logging
 from flask import Flask, Response, render_template, request
 from typing import Dict
 import threading
@@ -11,6 +11,9 @@ import os
 
 import GameEngine
 import Cards
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 class EndpointAction(object):
 
@@ -86,6 +89,7 @@ class GameHandler(object):
             way_left = data["card_directions"]["way_left"]
             destructible = data["destructible"]
             overwrite = data["overwrite"]
+            empty = data["empty"]
             card_id = data["card_id"]
             return Cards.TunnelCard(way_top=way_top,
                                     way_right=way_right,
@@ -93,7 +97,7 @@ class GameHandler(object):
                                     way_left=way_left,
                                     destructible=destructible,
                                     overwrite=overwrite,
-                                    empty=False,
+                                    empty=empty,
                                     card_id=card_id)
 
         elif data["card_type"] == "Action Card":
@@ -189,6 +193,7 @@ class GameHandler(object):
             way_right = card_info["card_directions"]["way_right"]
             way_bottom = card_info["card_directions"]["way_bottom"]
             way_left = card_info["card_directions"]["way_left"]
+            empty = card_info["empty"]
             destructible = card_info["destructible"]
             overwrite = card_info["overwrite"]
             pos_x = int(data["pos_x"])
@@ -200,7 +205,7 @@ class GameHandler(object):
                                     way_left=way_left,
                                     destructible=destructible,
                                     overwrite=overwrite,
-                                    empty=False)
+                                    empty=empty)
 
             isValidMove = game.check_game_tunnel_card_rules(card=card, pos_x=pos_x, pos_y=pos_y)
 
