@@ -1,3 +1,4 @@
+import json
 import uuid
 class Card:
     TUNNEL_TYPE = "Tunnel Card"
@@ -82,7 +83,10 @@ class TunnelCard(Card):
                           "destructible": self.destructible,
                           "overwrite": self.overwrite,
                           "card_type": self.TUNNEL_TYPE,
-                          "card_id": self.card_id}
+                          "card_id": self.card_id,
+                          "card_url": self.picture_url
+                          }
+        self.card_info_js = json.dumps(self.card_info)
 
     def symbol(self):
         return self.possible_cards[self.picture_url[:-4]]
@@ -110,7 +114,10 @@ class ActionCard(Card):
                           "action_type": self.action_type,
                           "is_positive_effect": self.is_positive_effect,
                           "card_type": self.ACTION_TYPE,
-                          "card_id": self.card_id}
+                          "card_id": self.card_id,
+                          "card_url": self.picture_url}
+
+        self.card_info_js = json.dumps(self.card_info)
 
     def __create_filename(self):
         return f"{self.action_type}_{'positive' if self.is_positive_effect else 'negative'}.png"

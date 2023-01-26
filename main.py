@@ -121,11 +121,9 @@ class GameHandler(object):
 
         player = game.players[data["player_id"]]
 
-        player_move = json.loads(data["player_move"])
-        player_move["card"] = ast.literal_eval(player_move["card"])
-        data["player_move"] = player_move
-
-        card = self.__build_card_from_json(player_move["card"])
+        data["player_move"] = json.loads(data["player_move"])
+        data["player_move"]['card'] = json.loads(data["player_move"]['card'])
+        card = self.__build_card_from_json(data["player_move"]["card"])
 
         card_exist = False
         for player_card in player.player_cards:
@@ -135,7 +133,7 @@ class GameHandler(object):
         if card_exist is False:
             return {"message_type": "error", "message": f"you dont have card that you used in your inventory"}
 
-        print(data)
+
         if data["player_move"]["move_type"] == "trash":
             for i in range(len(player.player_cards)):
                 if player.player_cards[i].is_card_the_same(card):
@@ -179,7 +177,8 @@ class GameHandler(object):
             if data["player_id"] not in game.players:
                 return {"message_type": "error", "message": "player not found"}
 
-            card_info = ast.literal_eval(json.loads(data["card"]))
+            print(data["card"])
+            card_info = json.loads(data["card"])
 
             if card_info["card_type"] != "Tunnel Card" and card_info["card_type"] != "Action Card":
                 return {"message_type": "error", "message": "wrong card type"}
@@ -233,7 +232,7 @@ class GameHandler(object):
         for player_id, player_obj in game.players.items():
             players_actions[player_id] = player_obj.player_actions
 
-        player_cards = {f"{card.picture_url}": card.info() for card in game.players[data["player_id"]].player_cards}
+        player_cards = {f"{card.picture_url}": card.card_info for card in game.players[data["player_id"]].player_cards}
 
         return {"message_type": "game_status_data",
                 "game_turn": game.turn,

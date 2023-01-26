@@ -77,7 +77,7 @@ function isMoveCorrect(current_element, place=false)
     let vars = "?";
     vars += "game_id=" + document.getElementById("data-game_id").innerHTML;
     vars += "&player_id=" + document.getElementById("data-player_id").innerHTML;
-    vars += "&card=\"" + placeholderObj.dataset.info + "\"";
+    vars += "&card=" + placeholderObj.dataset.info + "";
     vars += "&pos_x=" + current_element.id.split("_")[1];
     vars += "&pos_y=" + current_element.id.split("_")[2];
     if(!place)
