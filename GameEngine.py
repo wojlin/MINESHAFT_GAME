@@ -1,6 +1,7 @@
 from typing import Dict
 import random
 import math
+import copy
 
 import Cards
 from Player import Player
@@ -141,9 +142,19 @@ class Game(GameEngine):
     def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
         GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config)
 
-    def give_card_from_stack(self, player_id):
-        self.players[player_id].player_cards.append(self.cards[-1])
+    def give_card_from_stack(self, player_id, card_id):
+        for card in self.players[player_id].player_cards:
+            print(card.info())
+        print()
+        for i in range(len(self.players[player_id].player_cards)):
+            if self.players[player_id].player_cards[i].card_id == card_id:
+                print("removing card:", self.players[player_id].player_cards[i].info())
+                self.players[player_id].player_cards[i] = copy.deepcopy(self.cards[-1])
         self.cards.pop()
+
+        print()
+        for card in self.players[player_id].player_cards:
+            print(card.info())
 
     def end_turn(self):
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) else 0

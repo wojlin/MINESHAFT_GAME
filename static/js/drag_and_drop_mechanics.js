@@ -10,6 +10,7 @@ let halfPhantomSize = phantomSize / 2;
 let currentCell = null;
 
 moveMade = false;
+turnEnd = false;
 
 function showCorrectInfo(message)
 {

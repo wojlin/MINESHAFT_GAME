@@ -1,3 +1,5 @@
+import copy
+
 from flask import Flask, Response, render_template, request
 from typing import Dict
 import threading
@@ -101,7 +103,10 @@ class GameHandler(object):
             return Cards.ActionCard(action_type=action_type,is_positive_effect=is_positive_effect,card_id=card_id)
         raise Exception("incorrect card type")
 
+
     def end_turn(self, data: dict):
+        print("ending turn...")
+
         if "game_id" not in data:
             return {"message_type": "error", "message": "game parameters not exist in request"}
         if "player_id" not in data:
@@ -135,24 +140,21 @@ class GameHandler(object):
 
 
         if data["player_move"]["move_type"] == "trash":
-            for i in range(len(player.player_cards)):
-                if player.player_cards[i].is_card_the_same(card):
-                    player.player_cards.pop(i)
-                    break
+            self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
         elif card.card_type == card.TUNNEL_TYPE:
             pos_x = int(data["player_move"]["move_pos"]["x"])
             pos_y = int(data["player_move"]["move_pos"]["y"])
             status = game.check_game_tunnel_card_rules(card, pos_x=pos_x, pos_y=pos_y)
             if status is False:
                 return {"message_type": "error", "message": f"move is not valid"}
-            game.board[pos_y][pos_x] = card
+            game.board[pos_y][pos_x] = copy.deepcopy(card)
+            self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
         elif card.card_type == card.ACTION_TYPE:
             # TODO: check game action card rules
+            self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
             return {"message_type": "error", "message": f"not implemented yet"}
         else:
             raise Exception("incorrect card type")
-
-        game.give_card_from_stack(data["player_id"])
 
         print(game.end_turn())
 
@@ -214,6 +216,7 @@ class GameHandler(object):
             return {"message_type": "error", "message": f"unexpected error: {error}"}
 
     def fetch_game_status(self, data):
+        print("fetching status...")
         if "game_id" not in data:
             return {"message_type": "error", "message": "game parameters not exist in request"}
 

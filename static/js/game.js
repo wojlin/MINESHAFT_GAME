@@ -66,37 +66,39 @@ function update_game_status(message)
             cell.src = "static/images/" + message['board'][cell_y][cell_x];
         });
 
-        let cards_in_player_stack = [];
-
-        Object.keys( message["player_cards"]).forEach(function(key)
+        if(turnEnd == true)
         {
-            let card_info = JSON.stringify(message["player_cards"][key]);
-            let card_url = message["player_cards"][key]["card_url"];
+            let cards = document.getElementsByClassName("player-card-img");
 
-            cards_in_player_stack.push([card_info, card_url]);
-
-
-        });
-        console.log(cards_in_player_stack);
-
-
-
-        let cards = document.getElementsByClassName("player-card-img");
-
-        Array.prototype.forEach.call(cards, function(card)
-        {
-            for(let i = cards_in_player_stack.length - 1; i >= 0; i--)
+            for( let i =0; i<cards.length; i++)
             {
-
-                console.log(card.dataset.info, cards_in_player_stack[i][0])
-                console.log(card.dataset.info == cards_in_player_stack[i][0])
-                if(card.dataset.info == cards_in_player_stack[i][0])
-                {
-                    cards_in_player_stack.slice(i);
-                }
+                cards[i].src = "-";
+                cards[i].dataset.info = "";
             }
-        });
-        console.log(cards_in_player_stack);
+
+            let cards_in_player_stack = [];
+
+            Object.keys( message["player_cards"]).forEach(function(key)
+            {
+                let card_info = message["player_cards"][key];
+
+                cards_in_player_stack.push(card_info);
+
+
+            });
+
+
+
+            for( let i =0; i<cards_in_player_stack.length; i++)
+            {
+                cards[i].src = "static/images/" + cards_in_player_stack[i]["card_url"];
+                cards[i].dataset.info = JSON.stringify(cards_in_player_stack[i]);
+            }
+            turnEnd = false;
+        }
+
+
+
 
     }
     else
@@ -121,7 +123,8 @@ function end_turn(game_id, player_id)
     vars = "?game_id=" + game_id;
     vars += "&player_id=" + player_id;
     vars += "&player_move=" + JSON.stringify(playerMove) + "";
-    get_request("/game/end_turn"+vars, show_message)
+    get_request("/game/end_turn"+vars, show_message);
+    turnEnd = true;
 }
 
 
