@@ -46,6 +46,8 @@ class GameHandler(object):
 
         for game in self.games:
             print(self.games[game].info())
+            with open("path.txt", 'w') as file:
+                file.write(self.games[game].pathfinding_grid_info())
 
     def crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
@@ -152,6 +154,9 @@ class GameHandler(object):
             if status is False:
                 return {"message_type": "error", "message": f"move is not valid"}
             game.board[pos_y][pos_x] = copy.deepcopy(card)
+            game.update_pathfinding_grid(pos_x, pos_y, card)
+            with open('path.txt', 'w') as file:
+                file.write(game.pathfinding_grid_info())
             self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
         elif card.card_type == card.ACTION_TYPE:
             # TODO: check game action card rules

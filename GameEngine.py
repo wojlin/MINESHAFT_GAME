@@ -43,6 +43,18 @@ class GameEngine:
 
         self.EMPTY_CARD = Cards.TunnelCard(False, False, False, False, True, True, True, 'empty')
         self.board = self.__create_game_board()
+        self.grid = self.__create_pathfinding_grid()
+
+    def __create_pathfinding_grid(self):
+        grid = [[0 for x in range(len(self.board[0])*3)] for y in range(len(self.board)*3)]
+        for y in range(len(self.board)):
+            for x in range(len(self.board[0])):
+                cgrid = self.board[y][x].grid
+                for y1 in range(3):
+                    for x1 in range(3):
+                        grid[y*3+y1][x*3+x1] = cgrid[y1][x1]
+        return grid
+
 
     def __create_game_board(self):
         board = [[self.EMPTY_CARD for x in range(self.BOARD_SIZE_X)] for y in range(self.BOARD_SIZE_Y)]
@@ -250,6 +262,19 @@ class Game(GameEngine):
             return False
 
         return True
+
+    def update_pathfinding_grid(self, pos_x: int, pos_y: int, card: Cards.TunnelCard):
+        for y in range(3):
+            for x in range(3):
+                self.grid[pos_y * 3 + y][pos_x * 3 + x] = card.grid[y][x]
+
+    def pathfinding_grid_info(self):
+        grid = ''
+        for y in range(len(self.grid)):
+            for x in range(len(self.grid[0])):
+                grid += str(self.grid[y][x]) + ' '
+            grid += '\n'
+        return grid
 
     def info(self):
         info_str = f"uuid: {self.game_id}\n" \

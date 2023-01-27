@@ -1,5 +1,7 @@
 import json
 import uuid
+
+
 class Card:
     TUNNEL_TYPE = "Tunnel Card"
     ACTION_TYPE = "Action Card"
@@ -88,6 +90,18 @@ class TunnelCard(Card):
                           "card_url": self.picture_url
                           }
         self.card_info_js = json.dumps(self.card_info)
+
+        self.grid = self.__create_pathfinding_grid()
+
+    def __create_pathfinding_grid(self):
+        grid = [[0 for x in range(3)] for y in range(3)]
+        grid[0][1] = 1 if self.way_top else 0
+        grid[1][2] = 1 if self.way_right else 0
+        grid[2][1] = 1 if self.way_bottom else 0
+        grid[1][0] = 1 if self.way_left else 0
+        points = int(self.way_top) + int(self.way_right) + int(self.way_bottom) + int(self.way_left)
+        grid[1][1] = 1 if points >= 2 else 0
+        return grid
 
     def symbol(self):
         return self.possible_cards[self.picture_url[:-4]]
