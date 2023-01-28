@@ -3,6 +3,7 @@ import random
 import math
 import copy
 
+import const
 import Cards
 from Player import Player
 
@@ -157,6 +158,9 @@ class GameEngine:
 
 class Game(GameEngine):
     def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
+        creation_rules = self.check_game_creation_rules(players)
+        if creation_rules[const.MESSAGE_TYPE] == const.ERROR_MESSAGE:
+            raise const.InvalidMountOfPlayersException
         GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config)
 
     def give_card_from_stack(self, player_id, card_id):
@@ -178,13 +182,13 @@ class Game(GameEngine):
         self.turn = list(self.players.values())[self.current_turn_num].player_id
         return f"turn ended, now its '{self.players[self.turn].player_name}' turn"
 
-    def check_game_creation_rules(self):
-        if len(self.players) < 3:
-            return {"message_type": "error", "message_content": "not enough players"}
-        elif len(self.players) > 10:
-            return {"message_type": "error", "message_content": "too much players"}
+    def check_game_creation_rules(self, players):
+        if len(players) < const.MIN_AMOUNT_OF_PLAYERS:
+            return {"message_type": const.ERROR_MESSAGE, "message_content": const.PLAYERS_MESSAGES.NOT_ENOUGH_PLAYERS}
+        elif len(players) > const.MAX_AMOUNT_OF_PLAYERS:
+            return {"message_type": const.ERROR_MESSAGE, "message_content": const.PLAYERS_MESSAGES.TOO_MUCH_PLAYERS}
         else:
-            return {"message_type": "status", "message_content": "game can be created"}
+            return {"message_type": const.STATUS_MESSAGE, "message_content": const.PLAYERS_MESSAGES.CORRECT_AMOUNT}
 
     def check_game_tunnel_card_rules(self, card: Cards.TunnelCard, pos_x, pos_y):
 
