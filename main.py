@@ -188,6 +188,8 @@ class GameHandler(object):
             if data["player_id"] not in game.players:
                 return {"message_type": "error", "message": "player not found"}
 
+            player = game.players[data['player_id']]
+
             print(data)
             card_info = json.loads(data["card"])
 
@@ -200,6 +202,10 @@ class GameHandler(object):
                 else:
                     return {"message_type": "game_status_data", "message": True}
             elif card_info["card_type"] == "Tunnel Card":
+
+                if not all(player.player_actions):
+                    return {"message_type": "game_status_data", "message": False}
+
                 way_top = card_info["card_directions"]["way_top"]
                 way_right = card_info["card_directions"]["way_right"]
                 way_bottom = card_info["card_directions"]["way_bottom"]
