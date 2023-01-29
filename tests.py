@@ -1,5 +1,4 @@
 import unittest
-import colour_runner
 from typing import Dict
 import json
 import uuid

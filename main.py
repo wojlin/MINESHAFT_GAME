@@ -188,36 +188,42 @@ class GameHandler(object):
             if data["player_id"] not in game.players:
                 return {"message_type": "error", "message": "player not found"}
 
-            print(data["card"])
+            print(data)
             card_info = json.loads(data["card"])
 
             if card_info["card_type"] != "Tunnel Card" and card_info["card_type"] != "Action Card":
                 return {"message_type": "error", "message": "wrong card type"}
 
-            way_top = card_info["card_directions"]["way_top"]
-            way_right = card_info["card_directions"]["way_right"]
-            way_bottom = card_info["card_directions"]["way_bottom"]
-            way_left = card_info["card_directions"]["way_left"]
-            empty = card_info["empty"]
-            destructible = card_info["destructible"]
-            overwrite = card_info["overwrite"]
-            pos_x = int(data["pos_x"])
-            pos_y = int(data["pos_y"])
+            if card_info["card_type"] == "Action Card":
+                if 'pos_x' in data or 'pos_y' in data:
+                    return {"message_type": "game_status_data", "message": False}
+                else:
+                    return {"message_type": "game_status_data", "message": True}
+            elif card_info["card_type"] == "Tunnel Card":
+                way_top = card_info["card_directions"]["way_top"]
+                way_right = card_info["card_directions"]["way_right"]
+                way_bottom = card_info["card_directions"]["way_bottom"]
+                way_left = card_info["card_directions"]["way_left"]
+                empty = card_info["empty"]
+                destructible = card_info["destructible"]
+                overwrite = card_info["overwrite"]
+                pos_x = int(data["pos_x"])
+                pos_y = int(data["pos_y"])
 
-            card = Cards.TunnelCard(way_top=way_top,
-                                    way_right=way_right,
-                                    way_bottom=way_bottom,
-                                    way_left=way_left,
-                                    destructible=destructible,
-                                    overwrite=overwrite,
-                                    empty=empty)
+                card = Cards.TunnelCard(way_top=way_top,
+                                        way_right=way_right,
+                                        way_bottom=way_bottom,
+                                        way_left=way_left,
+                                        destructible=destructible,
+                                        overwrite=overwrite,
+                                        empty=empty)
 
-            isValidMove = game.check_game_tunnel_card_rules(card=card, pos_x=pos_x, pos_y=pos_y)
+                isValidMove = game.check_game_tunnel_card_rules(card=card, pos_x=pos_x, pos_y=pos_y)
 
-            if isValidMove:
-                return {"message_type": "game_status_data", "message": True}
-            else:
-                return {"message_type": "game_status_data", "message": False}
+                if isValidMove:
+                    return {"message_type": "game_status_data", "message": True}
+                else:
+                    return {"message_type": "game_status_data", "message": False}
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
