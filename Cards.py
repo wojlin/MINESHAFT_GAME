@@ -76,7 +76,8 @@ class TunnelCard(Card):
 
         Card.__init__(self, self.TUNNEL_TYPE, self.__create_filename(), card_id=card_id)
 
-        self.card_info = {"card_directions":
+        self.card_info = {
+                          "card_directions":
                               {"way_top": self.way_top,
                                "way_right": self.way_right,
                                "way_bottom": self.way_bottom,

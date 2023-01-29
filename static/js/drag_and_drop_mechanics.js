@@ -2,7 +2,7 @@ let placeholderObj = null;
 let selectedCard = null;
 let moveObject = null;
 let phantomSize = document.getElementById("cell_0_0_img").offsetWidth;
-let phantomActionSize = document.getElementsByClassName("action_image_dummy")[0].offsetWidth;
+
 let phantomPlaceholderSize = document.getElementsByClassName("action-panel-player-cards-table-cell")[0].offsetWidth;
 
 let halfPhantomSize = phantomSize / 2;
@@ -75,12 +75,26 @@ function placeElement(message)
 
 function isMoveCorrect(current_element, place=false)
 {
+    let card = JSON.parse(placeholderObj.dataset.info);
+
     let vars = "?";
     vars += "game_id=" + document.getElementById("data-game_id").innerHTML;
     vars += "&player_id=" + document.getElementById("data-player_id").innerHTML;
     vars += "&card=" + placeholderObj.dataset.info + "";
-    vars += "&pos_x=" + current_element.id.split("_")[1];
-    vars += "&pos_y=" + current_element.id.split("_")[2];
+    if(card['card_type'] == 'Tunnel Card' && current_element.classList.contains('cell'))
+    {
+        vars += "&pos_x=" + current_element.id.split("_")[1];
+        vars += "&pos_y=" + current_element.id.split("_")[2];
+    }
+    else if(card['card_type'] == 'Action Card' && current_element.classList.contains('action_image_dummy'))
+    {
+        vars += "&desired_player_id=" + current_element.dataset.playerid.toString();
+        vars += "&desired_player_action=" + current_element.dataset.actionnum.toString();
+    }else
+    {
+        console.log('incorrect card type');
+    }
+
     if(!place)
     {
         get_request('game/is_move_correct' + vars, showCorrectInfo);
@@ -119,7 +133,7 @@ document.addEventListener('click',(event) => {
         {
             console.log("card placed on action:");
             console.log(obj);
-            removePhantomCard(obj);
+            isMoveCorrect(obj, true);
         }
     }
      else if(obj.classList.contains("trash_box"))
@@ -171,8 +185,8 @@ function createPhantomCard(obj, src)
     let tintObject = document.createElement("div");
     tintObject.id = "phantomCardTint";
     tintObject.classList.add('moveObjectTint');
-    tintObject.style.width = phantomSize.toString() + "px";
-    tintObject.style.height = phantomSize.toString() + "px";
+    tintObject.style.width = "100%";
+    tintObject.style.height = "100%";
     moveObject.appendChild(tintObject);
     moveObject.id = "phantomCard";
     moveObject.classList.add('moveObject');
@@ -208,13 +222,20 @@ function cardMove(e)
         else if(current_element.classList.contains("action_image_dummy"))
         {
             let rect = current_element.getBoundingClientRect();
+            let phantomActionSize = document.getElementsByClassName("action_image_dummy")[0].offsetWidth;
+            let half = phantomActionSize / 2;
             let x_abs = rect.left + window.scrollX;
             let y_abs = rect.top + window.scrollY;
-            moveObject.style.top = (y_abs + halfPhantomSize).toString() + "px";
-            moveObject.style.left = (x_abs + halfPhantomSize).toString() + "px";
+            moveObject.style.top = (y_abs + half).toString() + "px";
+            moveObject.style.left = (x_abs + half).toString() + "px";
             moveObject.style.width = phantomActionSize.toString() + 'px';
             moveObject.style.height = phantomActionSize.toString() + 'px';
             document.body.style.setProperty('cursor', 'pointer');
+            if(currentCell != current_element)
+            {
+                isMoveCorrect(current_element);
+                currentCell = current_element;
+            }
         }
         else if(current_element.classList.contains("player-card-img"))
         {

@@ -197,12 +197,23 @@ class GameHandler(object):
                 return {"message_type": "error", "message": "wrong card type"}
 
             if card_info["card_type"] == "Action Card":
-                if 'pos_x' in data or 'pos_y' in data:
+                if 'desired_player_id' not in data or 'desired_player_action' not in data:
                     return {"message_type": "game_status_data", "message": False}
                 else:
+                    des_player_id = data['desired_player_id']
+                    des_player_action = int(data['desired_player_action'])
+                    if des_player_id not in game.players:
+                        return {"message_type": "error", "message": "player not found!"}
+                    des_player = game.players[des_player_id]
+                    if des_player_action != int(card_info['action_type']):
+                        return {"message_type": "game_status_data", "message": False}
+                    if des_player.player_actions[des_player_action] == card_info['is_positive_effect']:
+                        return {"message_type": "game_status_data", "message": False}
+
                     return {"message_type": "game_status_data", "message": True}
             elif card_info["card_type"] == "Tunnel Card":
-
+                if 'pos_x' not in data or 'pos_y' not in data:
+                    return {"message_type": "game_status_data", "message": False}
                 if not all(player.player_actions):
                     return {"message_type": "game_status_data", "message": False}
 
