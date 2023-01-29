@@ -178,7 +178,7 @@ class Game(GameEngine):
             print(card.info())
 
     def end_turn(self):
-        self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) else 0
+        self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) -1 else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
         return f"turn ended, now its '{self.players[self.turn].player_name}' turn"
 

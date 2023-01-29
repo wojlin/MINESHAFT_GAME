@@ -232,7 +232,7 @@ class GameHandler(object):
             return {"message_type": "error", "message": f"unexpected error: {error}"}
 
     def fetch_game_status(self, data):
-        print("fetching status...")
+        #print("fetching status...")
         if "game_id" not in data:
             return {"message_type": "error", "message": "game parameters not exist in request"}
 
