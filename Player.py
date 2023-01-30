@@ -12,3 +12,5 @@ class Player:
         self.player_actions = [True for x in range(amount)]
 
 
+
+

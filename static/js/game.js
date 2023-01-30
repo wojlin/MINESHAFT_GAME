@@ -75,10 +75,9 @@ function update_game_status(message)
 
             for( let i =0; i<cards.length; i++)
             {
-                cardHolders[cards[i].dataset.index] = JSON.parse(cards[i].dataset.info);
-                cardHolders[cards[i].dataset.index]["obj"] = cards[i];
+                cardHolders[cards[i].dataset.index.toString()] = cards[i];
             }
-
+            console.log(cards.length)
             console.log(cardHolders);
 
             console.log(playerCards);
@@ -86,10 +85,11 @@ function update_game_status(message)
             for (const [key, value] of Object.entries(cardHolders)) {
                  for (const [key1, value1] of Object.entries(playerCards))
                  {
-                  if(key == key1)
+                  if(key.toString() == key1.toString())
                   {
-                    cardHolders[key]['obj'].src = "static/images/" + value1["card_url"];
-                    cardHolders[key]['obj'].dataset.info = JSON.stringify(value1);
+                    console.log('updated card slot n', key, ' with: ', value1["card_url"])
+                    cardHolders[key.toString()].src = "static/images/" + value1["card_url"];
+                    cardHolders[key.toString()].dataset.info = JSON.stringify(value1);
                   }
                 }
             }

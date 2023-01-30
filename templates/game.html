@@ -38,10 +38,13 @@
             </table>
             <p class="player-info-panel-cards-title">cards:</p>
             <table class="action-panel-player-cards-table">
+            {% set count = namespace(value=0) %}
             {% for x in range((game.CARDS_PER_PLAYER_AMOUNT / 2) | int) %}
             <tr>
                 {% for y in range(2) %}
-                <td class="action-panel-player-cards-table-cell"><img data-index="{{((x+1)*(y+1) - 1) | int}}" data-info="{{game.players[player_id].player_cards[((x+1)*(y+1) - 1) | int].card_info_js}}" class="player-card-img" id="card_slot_{{(x+1)*(y+1)}}" src="{{ url_for('static', filename='images/' + game.players[player_id].player_cards[((x+1)*(y+1) - 1) | int].picture_url)}}" alt="" /><p>x</p></td>
+
+                <td class="action-panel-player-cards-table-cell"><img data-index="slot_{{count.value}}" data-info="{{game.players[player_id].player_cards[count.value].card_info_js}}" class="player-card-img" id="card_slot_{{count.value}}" src="{{ url_for('static', filename='images/' + game.players[player_id].player_cards[count.value].picture_url)}}" alt="" /><p>x</p></td>
+                {% set count.value = count.value + 1 %}
                 {% endfor %}
             </tr>
             {% endfor %}

@@ -277,7 +277,8 @@ class GameHandler(object):
             players_actions[player_id] = player_obj.player_actions
 
         cards = game.players[data["player_id"]].player_cards
-        player_cards = {f"{cards.index(card)}": card.card_info for card in cards}
+
+        player_cards = {f"slot_{cards.index(card)}": card.card_info for card in cards}
 
         return {"message_type": "game_status_data",
                 "game_turn": game.turn,
