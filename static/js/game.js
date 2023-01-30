@@ -70,30 +70,30 @@ function update_game_status(message)
         {
             let cards = document.getElementsByClassName("player-card-img");
 
+            let cardHolders = {};
+            let playerCards = message["player_cards"];
+
             for( let i =0; i<cards.length; i++)
             {
-                cards[i].src = "-";
-                cards[i].dataset.info = "";
+                cardHolders[cards[i].dataset.index] = JSON.parse(cards[i].dataset.info);
+                cardHolders[cards[i].dataset.index]["obj"] = cards[i];
             }
 
-            let cards_in_player_stack = [];
+            console.log(cardHolders);
 
-            Object.keys( message["player_cards"]).forEach(function(key)
-            {
-                let card_info = message["player_cards"][key];
+            console.log(playerCards);
 
-                cards_in_player_stack.push(card_info);
-
-
-            });
-
-
-
-            for( let i =0; i<cards_in_player_stack.length; i++)
-            {
-                cards[i].src = "static/images/" + cards_in_player_stack[i]["card_url"];
-                cards[i].dataset.info = JSON.stringify(cards_in_player_stack[i]);
+            for (const [key, value] of Object.entries(cardHolders)) {
+                 for (const [key1, value1] of Object.entries(playerCards))
+                 {
+                  if(key == key1)
+                  {
+                    cardHolders[key]['obj'].src = "static/images/" + value1["card_url"];
+                    cardHolders[key]['obj'].dataset.info = JSON.stringify(value1);
+                  }
+                }
             }
+
             turnEnd = false;
         }
 
