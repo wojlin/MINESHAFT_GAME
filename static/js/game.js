@@ -14,7 +14,7 @@ function update_game_status(message)
     {
         //console.log("fetched game status...")
 
-        let arrows = document.getElementsByClassName("player-panel-turn");
+        let arrows = document.getElementsByClassName("players-panel_turn");
         for (var i = 0; i < arrows.length; i++) {
 
            arrows[i].style.visibility = "hidden";
