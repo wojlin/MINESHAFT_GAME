@@ -58,17 +58,36 @@ function placeElement(message)
     moveMade = true;
     document.getElementById("action-panel-end_turn_button").disabled = false;
 
-    playerMove =
-    {
-     "card": placeholderObj.dataset.info,
-     "move_type": "map",
-     "move_pos":
-         {
-            "x": currentCell.id.split("_")[1],
-            "y":  currentCell.id.split("_")[2]
-         }
-     };
+    let cardInfo = JSON.parse(placeholderObj.dataset.info);
 
+    if(cardInfo['card_type'] == "Tunnel Card")
+    {
+        playerMove =
+        {
+         "card": placeholderObj.dataset.info,
+         "move_type": "map",
+         "move_pos":
+             {
+                "x": currentCell.id.split("_")[1],
+                "y":  currentCell.id.split("_")[2]
+             }
+         };
+    }else if(cardInfo['card_type'] == "Action Card")
+    {
+        playerMove =
+        {
+         "card": placeholderObj.dataset.info,
+         "move_type": "action",
+         "move_action":
+             {
+                 "desired_player_id": currentCell.dataset.playerid.toString(),
+                 "desired_player_action": currentCell.dataset.actionnum.toString()
+             }
+         };
+    }else
+    {
+    console.log('unexpected card type!');
+    }
     removePhantomCard(currentCell);
 
 }

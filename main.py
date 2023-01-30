@@ -147,7 +147,7 @@ class GameHandler(object):
 
         if data["player_move"]["move_type"] == "trash":
             self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
-        elif card.card_type == card.TUNNEL_TYPE:
+        elif data["player_move"]["move_type"] == "map":
             pos_x = int(data["player_move"]["move_pos"]["x"])
             pos_y = int(data["player_move"]["move_pos"]["y"])
             status = game.check_game_tunnel_card_rules(card, pos_x=pos_x, pos_y=pos_y)
@@ -158,10 +158,18 @@ class GameHandler(object):
             with open('path.txt', 'w') as file:
                 file.write(game.pathfinding_grid_info())
             self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
-        elif card.card_type == card.ACTION_TYPE:
-            # TODO: check game action card rules
+        elif data["player_move"]["move_type"] == "action":
+            des_player_id = data["player_move"]["move_action"]['desired_player_id']
+            des_player_action = int(data["player_move"]["move_action"]['desired_player_action'])
+            if des_player_id not in game.players:
+                return {"message_type": "error", "message": "player not found!"}
+            des_player = game.players[des_player_id]
+            if int(des_player_action) != int(card.action_type):
+                return {"message_type": "error", "message": f"move is not valid"}
+            if des_player.player_actions[des_player_action] == card.is_positive_effect:
+                return {"message_type": "error", "message": f"move is not valid"}
+            des_player.player_actions[des_player_action] = card.is_positive_effect
             self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
-            return {"message_type": "error", "message": f"not implemented yet"}
         else:
             raise Exception("incorrect card type")
 
@@ -190,7 +198,7 @@ class GameHandler(object):
 
             player = game.players[data['player_id']]
 
-            print(data)
+            #print(data)
             card_info = json.loads(data["card"])
 
             if card_info["card_type"] != "Tunnel Card" and card_info["card_type"] != "Action Card":
