@@ -38,23 +38,56 @@ class GameHandler(object):
 
         self.games: Dict[str, GameEngine.Game] = {}
         self.rooms: Dict[str, GameRoom] = {}
-        players: Dict[str, GameEngine.Player] = {}
 
-        for x in range(5):
-            new_id = str(uuid.uuid4())
-            players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id)
+        if self.config["development_stage"]:
+            players: Dict[str, GameEngine.Player] = {}
 
-        self.crate_game(name="test game", players=players, config=self.config)
+            for x in range(20):
+                room_id = str(uuid.uuid4())
+                self.rooms[room_id] = GameRoom(room_comment="test comment",
+                                               room_name=f'room {x}',
+                                               room_id=room_id,
+                                               game_host_player_id=str(uuid.uuid4()),
+                                               game_host_player_name='host',
+                                               room_password="1234" if x % 3 == 0 else '')
 
-        for game in self.games:
-            print(self.games[game].info())
-            with open("path.txt", 'w') as file:
-                file.write(self.games[game].pathfinding_grid_info())
+            for x in range(5):
+                new_id = str(uuid.uuid4())
+                players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id)
 
-    def create_room(self):
+            self.crate_game(name="test game", players=players, config=self.config)
+
+            for game in self.games:
+                print(self.games[game].info())
+                with open("path.txt", 'w') as file:
+                    file.write(self.games[game].pathfinding_grid_info())
+
+    def create_room(self, data):
+        if "player_name" not in data:
+            return {"message_type": "error", "message": "player name not in request data"}
+
+        if "room_name" not in data:
+            return {"message_type": "error", "message": "room name not in request data"}
+
+        if "room_comment" not in data:
+            return {"message_type": "error", "message": "room comment not in request data"}
+
+        if "room_password" not in data:
+            return {"message_type": "error", "message": "room password not in request data"}
+
         room_id = str(uuid.uuid4())
         player_id = str(uuid.uuid4())
-        room = GameRoom(room_id=room_id, game_host_player_id=player_id)
+        player_name = data["player_name"]
+        room_name = data["room_name"]
+        room_password = data["room_password"]
+        room_comment = data["room_comment"]
+        room = GameRoom(room_comment=room_comment,
+                        room_name=room_name,
+                        room_id=room_id,
+                        game_host_player_id=player_id,
+                        game_host_player_name=player_name,
+                        room_password=room_password)
+
         self.rooms[room_id] = room
         return {"message_type": "status",
                 "message": "game room created!",
@@ -83,7 +116,7 @@ class GameHandler(object):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler))
 
     def index(self, *args, **kwargs):
-        return render_template('index.html')
+        return render_template('index.html', rooms=self.rooms)
 
     def game(self, data: dict):
         if "game_id" not in data or "player_id" not in data:

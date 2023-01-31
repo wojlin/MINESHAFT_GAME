@@ -10,11 +10,27 @@
 <h1>Tunnel Game</h1>
 <button onclick="create_new_room();" id="create_new_room">Create new room</button>
  <div id="content">
-
-     <div id="rooms">
-         {% for room in rooms %}
-            <div class="room">join room</div>
+    <table id="rooms_table">
+        <tr>
+            <th>Name:</th>
+            <th>Players:</th>
+            <th>Comment:</th>
+            <th>Locked:</th>
+            <th>Join:</th>
+        </tr>
+        {% for room in rooms %}
+            <tr>
+                <td>{{rooms[room].room_name}}</td>
+                <td>{{rooms[room].players_amount}}/10</td>
+                <td>{{rooms[room].room_comment}}</td>
+                <td>{{rooms[room].locked}}</td>
+                <td><button>join</button></td>
+            </tr>
          {% endfor %}
+
+    </table>
+     <div id="rooms">
+
      </div>
  </div>
 <script src="{{url_for('static', filename='js/game_rooms.js')}}"></script>

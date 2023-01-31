@@ -4,6 +4,7 @@ h1
     text-align: center;
     font-size: 7vh;
     font-weight: 200;
+    margin-bottom: 2vh;
 }
 
 #content
@@ -13,7 +14,7 @@ h1
     left:0;
     right:0;
     margin:auto;
-    width:40vh;
+    width:70vh;
     height:50vh;
     transform: translate(0, -50%);
     background: var( --background-panel);
@@ -24,7 +25,7 @@ h1
 {
     position:relative;
     display:block;
-    width:90%;
+    width:70vh;
     margin:auto;
     margin-
     font-size:4vh;
@@ -33,16 +34,22 @@ h1
     border-radius: 0.5vh;
 }
 
-.room
+#rooms_table
 {
-    position:relative;
-    display:block;
-    width:90%;
-    margin:auto;
-    margin-
-    font-size:4vh;
-    background: rgba(0,0,0,0.1);
-    border: solid 0.2vh var(--border-color);
-    border-radius: 0.5vh;
+    width: 100%;
+    border-collapse: collapse;
 }
 
+#rooms_table tr:first-child{
+  border-bottom: solid 0.2vh var(--border-color);
+}
+
+#rooms_table tr{
+  border-bottom: solid 0.1vh rgba(255,255,255,0.3);
+}
+
+#rooms_table td{
+  text-align: center;
+    vertical-align: middle;
+
+}

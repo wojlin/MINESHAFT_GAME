@@ -1,5 +1,6 @@
 {
   "host": "localhost",
   "port": 2137,
-  "debug": false
+  "debug": false,
+  "development_stage": true
 }
