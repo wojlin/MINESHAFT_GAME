@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>main page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inheritance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 <body>
+<h1>Tunnel Game</h1>
+<button onclick="create_new_room();" id="create_new_room">Create new room</button>
+ <div id="content">
 
+     <div id="rooms">
+         {% for room in rooms %}
+            <div class="room">join room</div>
+         {% endfor %}
+     </div>
+ </div>
+<script src="{{url_for('static', filename='js/game_rooms.js')}}"></script>
 </body>
 </html>

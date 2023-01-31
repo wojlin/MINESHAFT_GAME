@@ -10,6 +10,7 @@ import ast
 import os
 
 import GameEngine
+from GameRoom import GameRoom
 import Cards
 
 log = logging.getLogger('werkzeug')
@@ -36,6 +37,7 @@ class GameHandler(object):
         threading.Thread(target=self.run_api, args=()).start()
 
         self.games: Dict[str, GameEngine.Game] = {}
+        self.rooms: Dict[str, GameRoom] = {}
         players: Dict[str, GameEngine.Player] = {}
 
         for x in range(5):
@@ -49,12 +51,26 @@ class GameHandler(object):
             with open("path.txt", 'w') as file:
                 file.write(self.games[game].pathfinding_grid_info())
 
+    def create_room(self):
+        room_id = str(uuid.uuid4())
+        player_id = str(uuid.uuid4())
+        room = GameRoom(room_id=room_id, game_host_player_id=player_id)
+        self.rooms[room_id] = room
+        return {"message_type": "status",
+                "message": "game room created!",
+                "data": {
+                    "room_id": room_id,
+                    "player_id": player_id
+                        }
+                }
+
     def crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
         self.games[game_id] = GameEngine.Game(name, game_id, players, config)
 
     def add_endpoints(self):
         self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)
+        self.add_endpoint(endpoint='/create_room', endpoint_name='create room', handler=self.create_room)
         self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
         self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
         self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)
@@ -66,7 +82,7 @@ class GameHandler(object):
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler))
 
-    def index(self):
+    def index(self, *args, **kwargs):
         return render_template('index.html')
 
     def game(self, data: dict):
