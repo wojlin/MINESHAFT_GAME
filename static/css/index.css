@@ -137,7 +137,7 @@ table tbody tr {
 	height: 3vh;
 }
 
-.join_button:hover, #create_new_room:hover {
+.join_button:hover, #create_new_room:hover, .submit-form:hover {
 	transform: scale(1.05);
 	transition: all 0.2s;
 	cursor: pointer;
@@ -154,4 +154,83 @@ background: linear-gradient(transparent,  var( --background-panel));
   left:0;
   right:0;
   height:8vh;
+}
+
+#opacity-div
+{
+    background: black;
+    opacity:0.88;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    z-index:10;
+}
+
+#create_new_room_div
+{
+    position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: fit-content;
+	height: fit-content;
+	transform: translate(0, -50%);
+	background: var( --background-panel);
+	border: solid 0.5vh var(--border-color);
+	overflow: hidden;
+	border-radius: 2vh;
+	z-index: 20;
+}
+#create_new_room_form {
+
+	display: grid;
+	grid-template-columns: 15vh 30vh;
+	grid-gap: 5px;
+	grid-template-rows: 2vh 2vh 2vh 2vh 2vh;
+}
+
+#create_new_room_form label       { text-align:right; }
+#create_new_room_form label:after { }
+
+#create_new_room_form input
+{
+ width:25vh;
+ float:left;
+ color:black;
+ margin-left:1vh;
+}
+
+#create-private
+{
+width:2vh !important;
+}
+
+.form-title
+{
+    text-align:center;
+    font-size:3vh;
+    margin-bottom:2vh;
+}
+
+.submit-form
+{
+    display:block;
+    margin:auto;
+    width: 20ch;
+	background: rgba(0,0,0,0.2);
+	border: solid 0.2vh rgba(255,255,255,0.5);
+	border-radius: 0.5vh;
+	line-height: 1.5vh;
+	font-size: 1.5vh;
+	height: 3vh;
+	margin-top:2vh;
+	margin-bottom:2vh;
+}
+
+#create_new_room_div, #join_room_div, #opacity-div
+{
+    visibility: hidden;
 }
