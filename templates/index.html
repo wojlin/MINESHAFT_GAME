@@ -11,23 +11,27 @@
 <button onclick="create_new_room();" id="create_new_room">Create new room</button>
  <div id="content">
     <table id="rooms_table">
-        <tr>
-            <th>Name:</th>
-            <th>Players:</th>
-            <th>Comment:</th>
-            <th>Locked:</th>
-            <th>Join:</th>
-        </tr>
-        {% for room in rooms %}
+        <thead>
             <tr>
-                <td>{{rooms[room].room_name}}</td>
-                <td>{{rooms[room].players_amount}}/10</td>
-                <td>{{rooms[room].room_comment}}</td>
-                <td>{{rooms[room].locked}}</td>
-                <td><button>join</button></td>
+                <th>Name:</th>
+                <th>Players:</th>
+                <th>Comment:</th>
+                <th>Locked:</th>
+                <th>Join:</th>
             </tr>
-         {% endfor %}
-
+        </thead>
+        <tbody>
+            {% for room in rooms %}
+                <tr>
+                    <td>{{rooms[room].room_name}}</td>
+                    <td>{{rooms[room].players_amount}}/10</td>
+                    <td>{{rooms[room].room_comment}}</td>
+                    <td>{{'<img src="static/images/locked.png"/>'|safe if rooms[room].locked else '<img src="static/images/unlocked.png"/>'|safe}}</td>
+                    <td><button class="join_button">join</button></td>
+                </tr>
+             {% endfor %}
+        <div id="gradient"></div>
+        </tbody>
     </table>
      <div id="rooms">
 
