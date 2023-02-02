@@ -39,7 +39,7 @@
     </table>
 </div>
 <div id="create_new_room_div">
-    <p class="form-title">create new room</p>
+    <p class="form-title">Create new room</p>
     <div id="create_new_room_form">
         <label for="create-player">Player Name:</label>
         <input type="text" id="create-player" name="create-player" maxlength="15">
@@ -55,16 +55,17 @@
     <button class="submit-form" onclick="create_new_room();">create room</button>
 </div>
 <div id="join_room_div">
-    <p class="form-title">create new room</p>
+    <p class="form-title">Join room</p>
     <div id="join_room_form">
         <label for="join-player">Player Name:</label>
         <input type="text" id="join-player" name="join-player" maxlength="15">
-        <label for="join-password">Room Password:</label>
+        <label id="join-password-label" for="join-password">Room Password:</label>
         <input type="password" id="join-password" name="join-password" maxlength="30">
+        <input type="hidden" id="join-id" name="join-id" maxlength="30">
     </div>
-    <button class="submit-form" onclick="create_new_room();">create room</button>
+    <button class="submit-form" onclick="join_room();">join room</button>
 </div>
-<div id="opacity-div"><button id="hide_forms" onclick="hide_forms();">X</button></div>
+<div id="opacity-div"><button id="hide_forms" onclick="hide_forms();">❌</button></div>
 <script src="{{url_for('static', filename='js/game_rooms.js')}}"></script>
 </body>
 </html>

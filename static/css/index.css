@@ -159,7 +159,7 @@ background: linear-gradient(transparent,  var( --background-panel));
 #opacity-div
 {
     background: black;
-    opacity:0.88;
+    opacity:0.92;
     position:absolute;
     left:0;
     right:0;
@@ -168,7 +168,7 @@ background: linear-gradient(transparent,  var( --background-panel));
     z-index:10;
 }
 
-#create_new_room_div
+#create_new_room_div, #join_room_div
 {
     position: absolute;
 	top: 50%;
@@ -184,18 +184,17 @@ background: linear-gradient(transparent,  var( --background-panel));
 	border-radius: 2vh;
 	z-index: 20;
 }
-#create_new_room_form {
+#create_new_room_form, #join_room_form {
 
 	display: grid;
 	grid-template-columns: 15vh 30vh;
-	grid-gap: 5px;
-	grid-template-rows: 2vh 2vh 2vh 2vh 2vh;
+	grid-gap: 1vh;
 }
 
-#create_new_room_form label       { text-align:right; }
-#create_new_room_form label:after { }
+#create_new_room_form label, #join_room_form label{ text-align:right; }
+#create_new_room_form label:after, #join_room_form label:after { }
 
-#create_new_room_form input
+#create_new_room_form input, #join_room_form input
 {
  width:25vh;
  float:left;
@@ -233,4 +232,25 @@ width:2vh !important;
 #create_new_room_div, #join_room_div, #opacity-div
 {
     visibility: hidden;
+}
+
+#hide_forms
+{
+    height:5vh;
+    width:5vh;
+    position:absolute;
+    right:5vh;
+    top:5vh;
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-size:5vh;
+    transition: all 0.2s;
+}
+
+#hide_forms:hover
+{
+    transform:scale(1.2);
+    opacity:0.7;
 }

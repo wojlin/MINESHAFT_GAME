@@ -42,7 +42,7 @@ class GameHandler(object):
         if self.config["development_stage"]:
             players: Dict[str, GameEngine.Player] = {}
 
-            for x in range(20):
+            for x in range(3):
                 room_id = str(uuid.uuid4())
                 self.rooms[room_id] = GameRoom(room_comment="test comment",
                                                room_name=f'room {x}',
@@ -61,6 +61,43 @@ class GameHandler(object):
                 print(self.games[game].info())
                 with open("path.txt", 'w') as file:
                     file.write(self.games[game].pathfinding_grid_info())
+
+    def room(self, data):
+        if "player_id" not in data:
+            return {"message_type": "error", "message": "player id not in request data"}
+
+        if "room_id" not in data:
+            return {"message_type": "error", "message": "room id not in request data"}
+
+        return render_template("room.html", room=self.rooms[data["room_id"]], player_id=data["room_id"])
+
+    def join_room(self, data):
+        if "player_name" not in data:
+            return {"message_type": "error", "message": "player name not in request data"}
+
+        if "room_id" not in data:
+            return {"message_type": "error", "message": "room id not in request data"}
+
+        if "room_password" not in data:
+            return {"message_type": "error", "message": "room password not in request data"}
+
+        room_id = data["room_id"]
+        room = self.rooms[room_id]
+
+        if room.locked:
+            if data["room_password"] != room.room_password:
+                return {"message_type": "error", "message": "invalid password!"}
+
+        player_id = str(uuid.uuid4())
+        room.add_player_to_room(player_id, data["player_name"])
+
+        return {"message_type": "status",
+                "message": "joined room!",
+                "data": {
+                    "room_id": room_id,
+                    "player_id": player_id
+                }
+                }
 
     def create_room(self, data):
         if "player_name" not in data:
@@ -104,6 +141,8 @@ class GameHandler(object):
     def add_endpoints(self):
         self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)
         self.add_endpoint(endpoint='/create_room', endpoint_name='create room', handler=self.create_room)
+        self.add_endpoint(endpoint='/join_room', endpoint_name='join room', handler=self.join_room)
+        self.add_endpoint(endpoint='/room', endpoint_name='room', handler=self.room)
         self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
         self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
         self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)

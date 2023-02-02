@@ -40,9 +40,23 @@ function create_new_room_handler(response)
     window.location.href = '/room?room_id='+response["data"]["room_id"]+"&player_id="+response["data"]["player_id"];
 }
 
+function join_room_handler(response)
+{
+    console.log(response)
+    window.location.href = '/room?room_id='+response["data"]["room_id"]+"&player_id="+response["data"]["player_id"];
+}
+
 
 function join_room()
 {
+    let player_name = document.getElementById("join-player").value;
+    let room_id = document.getElementById("join-id").value;
+    let room_password = document.getElementById("join-password").value;
+    let url = '/join_room';
+    url += "?player_name=" + player_name;
+    url += "&room_id=" + room_id;
+    url += "&room_password=" + room_password;
+    get_request(url, join_room_handler)
     console.log("joined room!");
 }
 
@@ -56,6 +70,20 @@ document.getElementById('create-private').onchange = function() {
 function show_join_room_form(room_id, isLocked)
 {
     console.log("showing 'join room' form...");
+    document.getElementById("join-password").value = "";
+    document.getElementById("join-id").value = "";
+    if(isLocked == "False")
+    {
+        document.getElementById("join-password").style.display = "none";
+        document.getElementById("join-password-label").style.display = "none";
+    }else
+    {
+        document.getElementById("join-password").style.display = "block";
+        document.getElementById("join-password-label").style.display = "block";
+    }
+    document.getElementById("join-id").value = room_id;
+
+    document.getElementById('create_new_room_div').style.visibility = 'hidden';
     document.getElementById('join_room_div').style.visibility = 'visible';
     document.getElementById('opacity-div').style.visibility = 'visible';
 }
