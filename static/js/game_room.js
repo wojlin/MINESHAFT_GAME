@@ -18,21 +18,57 @@ function showMessage(message)
     alert(message);
 }
 
-function fetch_room_handler(message)
+function fetch_room_handler(data)
 {
-    console.log(message);
+    console.log(data);
+    let player_id = document.body.dataset.playerid;
+    if (data["data"]["host_id"] == player_id)
+    {
+        if(data["data"]["players_amount"] >= 3)
+        {
+            document.getElementById("start_game").disabled = false;
+        }
+        else
+        {
+            document.getElementById("start_game").disabled = true;
+        }
+    }
+
+    let player_list = document.getElementById("players-list");
+
+    player_list.innerHTML = "";
+
+    let count = 1;
+    for (const [key, value] of Object.entries(data["data"]["players"]))
+    {
+        let entry = document.createElement("li");
+        entry.classList.add("player-list-element");
+        entry.innerHTML = count.toString() + ". " + value;
+        player_list.appendChild(entry);
+        count += 1;
+    }
+    let count_set = count;
+    for(let x = 0; x <= 10 - count_set; x++)
+    {
+        let entry = document.createElement("li");
+        entry.classList.add("player-list-element");
+        entry.innerHTML = count.toString() + ". " + '-';
+        player_list.appendChild(entry);
+        count += 1;
+    }
 }
 
 function fetch_room_status()
 {
-    get_request('/fetch_room_status/', fetch_room_handler)
+    let room_id = document.body.dataset.roomid;
+    get_request('/room/fetch_room_status?room_id='+room_id, fetch_room_handler);
 }
 
 function start_game()
 {
-    let room = JSON.parse(document.body.dataset.room.value);
-    let player_id = JSON.parse(document.body.dataset.playerid.value);
-    let room_id = JSON.parse(document.body.dataset.roomid.value);
+    let room = JSON.parse(document.body.dataset.room);
+    let player_id = document.body.dataset.playerid;
+    let room_id = document.body.dataset.roomid;
 
     if(room["host_id"] != player_id)
     {
@@ -46,6 +82,9 @@ function start_game()
         return;
     }
 
-     get_request('/start_game/', fetch_start_game_handler)
+     get_request('/room/start_game', fetch_start_game_handler)
 
 }
+
+
+setInterval(function(){fetch_room_status()}, 1000);

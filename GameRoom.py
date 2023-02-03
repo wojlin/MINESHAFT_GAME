@@ -25,6 +25,13 @@ class GameRoom:
         self.players[player_id] = Player(player_name, player_id)
         self.players_amount += 1
 
+    def fetch_status(self):
+        players = {player.player_id: player.player_name for index, player in self.players.items()}
+        status = {"room_id": self.room_id,
+                  "host_id": self.host_id,
+                  "players_amount": self.players_amount,
+                  "players": players}
+        return status
     def info(self):
         info_str = f"room: {self.room_name}  "
         url_base = f"http://{self.config['host']}:{self.config['port']}/room"
