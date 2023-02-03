@@ -23,3 +23,10 @@ python3 main.py
 python3 tests.py
 ```
 
+#### TODO:
+* disable join button if room is full
+* refresh rooms list each x second
+* dealocate empty rooms from memory
+* create stats page
+* finish implementing gameplay
+

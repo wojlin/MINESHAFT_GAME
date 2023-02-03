@@ -20,6 +20,7 @@ class GameRoom:
         self.players_amount = 1
         self.host_id = game_host_player_id
         self.players = {game_host_player_id: Player(game_host_player_name, game_host_player_id)}
+        self.game_started = False
 
     def add_player_to_room(self, player_id: str, player_name: str):
         self.players[player_id] = Player(player_name, player_id)
@@ -30,8 +31,10 @@ class GameRoom:
         status = {"room_id": self.room_id,
                   "host_id": self.host_id,
                   "players_amount": self.players_amount,
-                  "players": players}
+                  "players": players,
+                  "game_started": self.game_started}
         return status
+
     def info(self):
         info_str = f"room: {self.room_name}  "
         url_base = f"http://{self.config['host']}:{self.config['port']}/room"

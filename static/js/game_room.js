@@ -22,6 +22,11 @@ function fetch_room_handler(data)
 {
     console.log(data);
     let player_id = document.body.dataset.playerid;
+    if(data["data"]["game_started"])
+    {
+        window.location.href = "/game?game_id=" + data["data"]["room_id"] + "&player_id=" + player_id;
+    }
+
     if (data["data"]["host_id"] == player_id)
     {
         if(data["data"]["players_amount"] >= 3)
@@ -64,17 +69,15 @@ function fetch_room_status()
     get_request('/room/fetch_room_status?room_id='+room_id, fetch_room_handler);
 }
 
+function fetch_start_game_handler(data)
+{
+    fetch_room_handler(data);
+}
+
 function start_game()
 {
-    let room = JSON.parse(document.body.dataset.room);
     let player_id = document.body.dataset.playerid;
     let room_id = document.body.dataset.roomid;
-
-    if(room["host_id"] != player_id)
-    {
-        showMessage("you are not host of the game!");
-        return;
-    }
 
     if(room["players_amount"] < 3)
     {
@@ -82,7 +85,7 @@ function start_game()
         return;
     }
 
-     get_request('/room/start_game', fetch_start_game_handler)
+     get_request('/room/start_game?room_id=' + room_id + "&player_id="+ player_id, fetch_start_game_handler)
 
 }
 

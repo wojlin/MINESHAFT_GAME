@@ -163,9 +163,31 @@ class GameHandler(object):
 
         return {"message_type": "status", "data": status}
 
-    def create_game(self, data):
-        print(data)
-        return "work in progress"
+    def start_game(self, data):
+
+        if "room_id" not in data:
+            return {"message_type": "error", "message": "room id not in request data"}
+
+        if "player_id" not in data:
+            return {"message_type": "error", "message": "player id not in request data"}
+
+        if data["room_id"] not in self.rooms:
+            return render_template("room_not_found.html")
+
+        room = self.rooms[data["room_id"]]
+
+        if data["player_id"] != room.host_id:
+            return {"message_type": "error", "message": "only host can start the game"}
+
+        room.game_started = True
+        self.games[room.room_id] = GameEngine.Game(game_id=room.room_id,
+                                              config=self.config,
+                                              name=room.room_name,
+                                              players=copy.deepcopy(room.players))
+
+        status = room.fetch_status()
+
+        return {"message_type": "status", "data": status}
 
     def __crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
@@ -177,7 +199,7 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/join_room', endpoint_name='join room', handler=self.join_room)
         self.add_endpoint(endpoint='/room', endpoint_name='room', handler=self.room)
         self.add_endpoint(endpoint='/room/fetch_room_status', endpoint_name='fetch room status', handler=self.fetch_room_status)
-        self.add_endpoint(endpoint='/room/create_game', endpoint_name='create game', handler=self.create_game)
+        self.add_endpoint(endpoint='/room/start_game', endpoint_name='start game', handler=self.start_game)
         self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
         self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
         self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)
