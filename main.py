@@ -31,6 +31,7 @@ class GameHandler(object):
     app = None
 
     def __init__(self, name):
+        self.game_name = "TUNNEL GAME"
         self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
         self.add_endpoints()
@@ -49,18 +50,22 @@ class GameHandler(object):
                                                room_id=room_id,
                                                game_host_player_id=str(uuid.uuid4()),
                                                game_host_player_name='host',
-                                               room_password="1234" if x % 3 == 0 else '')
+                                               room_password="1234" if x % 3 == 0 else '',
+                                               config=self.config)
 
             for x in range(5):
                 new_id = str(uuid.uuid4())
                 players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id)
 
-            self.crate_game(name="test game", players=players, config=self.config)
+            self.__crate_game(name="test game", players=players, config=self.config)
 
             for game in self.games:
                 print(self.games[game].info())
                 with open("path.txt", 'w') as file:
                     file.write(self.games[game].pathfinding_grid_info())
+
+            for room in self.rooms:
+                print(self.rooms[room].info())
 
     def room(self, data):
         if "player_id" not in data:
@@ -69,7 +74,13 @@ class GameHandler(object):
         if "room_id" not in data:
             return {"message_type": "error", "message": "room id not in request data"}
 
-        return render_template("room.html", room=self.rooms[data["room_id"]], player_id=data["room_id"])
+        if data["room_id"] not in self.rooms:
+            return {"message_type": "error", "message": "room does not exist"}
+
+        if data["player_id"] not in self.rooms[data["room_id"]].players:
+            return {"message_type": "error", "message": "room does not exist"}
+
+        return render_template("room.html", room=self.rooms[data["room_id"]], player_id=data["player_id"], game_name=self.game_name)
 
     def join_room(self, data):
         if "player_name" not in data:
@@ -123,7 +134,8 @@ class GameHandler(object):
                         room_id=room_id,
                         game_host_player_id=player_id,
                         game_host_player_name=player_name,
-                        room_password=room_password)
+                        room_password=room_password,
+                        config=self.config)
 
         self.rooms[room_id] = room
         return {"message_type": "status",
@@ -134,7 +146,15 @@ class GameHandler(object):
                         }
                 }
 
-    def crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
+    def fetch_room_status(self, data):
+        print(data)
+        return "work in progress"
+
+    def create_game(self, data):
+        print(data)
+        return "work in progress"
+
+    def __crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
         self.games[game_id] = GameEngine.Game(name, game_id, players, config)
 
@@ -143,6 +163,8 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/create_room', endpoint_name='create room', handler=self.create_room)
         self.add_endpoint(endpoint='/join_room', endpoint_name='join room', handler=self.join_room)
         self.add_endpoint(endpoint='/room', endpoint_name='room', handler=self.room)
+        self.add_endpoint(endpoint='/game/fetch_room_status', endpoint_name='fetch room status', handler=self.fetch_room_status)
+        self.add_endpoint(endpoint='/create_game', endpoint_name='create game', handler=self.create_game)
         self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
         self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
         self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)

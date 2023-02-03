@@ -2,9 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{room.room_name}} | {{game_name}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inheritance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/room.css') }}">
 </head>
-<body>
-    <h1>ROOM</h1>
+<body data-playerid="{{player_id}}" data-roomid="{{room_id}}" data-room="">
+<div id="room">
+    <h1 id="room_name">{{room.room_name}}</h1>
+    <p id="room_comment">{{room.room_comment}}</p>
+    <p class="room_paragraph">players list:</p>
+    <ul id="players-list">
+        {% set count = namespace(value=1) %}
+        {% for player in room.players %}
+        <li class="player-list-element">{{count.value}}. {{room.players[player].player_name}}</li>
+        {% set count.value = count.value + 1 %}
+        {% endfor %}
+        {% for x in range(10 - room.players|length) %}
+        <li class="player-list-element">{{count.value}}. -</li>
+        {% set count.value = count.value + 1 %}
+        {% endfor %}
+    </ul>
+    {% if player_id == room.host_id %}
+    <button id="start_game" onclick="start_game();" disabled>start game</button>
+    <p class="message_text" id="host_message_text">waiting for more players to join...</p>
+    {% else %}
+    <p class="message_text" id="player_message_text">waiting for more players to join...</p>
+    {% endif %}
+</div>
+<script src="{{url_for('static', filename='js/game_room.js')}}"></script>
 </body>
 </html>

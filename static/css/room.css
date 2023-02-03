@@ -1,0 +1,99 @@
+#room
+{
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    margin:auto;
+    width:fit-content;
+    height:fit-content;
+    transform: translate(0, -50%);
+    background: var( --background-panel);
+    border: solid 0.5vh var(--border-color);
+    overflow: hidden;
+    border-radius:2vh;
+    padding:3vh;
+}
+
+#room_name
+{
+    margin-top:-2.5vh;
+    text-align:center;
+    font-size:5vh;
+}
+
+#room_comment
+{
+    text-align:center;
+    font-style: italic;
+    font-size:2vh;
+    color:rgba(255,255,255,0.3);
+}
+
+.room_paragraph
+{
+    text-align:center;
+    margin:1vh;
+    margin-top:2vh;
+}
+
+#players-list
+{
+    margin:auto;
+    width:30vh;
+    height:fit-content;
+    overflow-x:hidden;
+    overflow-y:auto;
+    background:rgba(255,255,255,0.1);
+    border-radius:1vh;
+}
+
+.player-list-element
+{
+    border-bottom: solid 0.2vh rgba(255,255,255,0.3);
+    font-size:2vh;
+    margin:1vh;
+}
+
+.player-list-element:last-child
+{
+    border:none;
+    margin-bottom:0vh;
+}
+
+#start_game {
+    display:block;
+    margin:auto;
+    margin-top:1vh;
+    margin-bottom:1vh;
+	width: 20ch;
+	background: rgba(0,0,0,0.2);
+	border: solid 0.2vh rgba(255,255,255,0.5);
+	border-radius: 0.5vh;
+	line-height: 1.5vh;
+	font-size: 1.5vh;
+	height: 3vh;
+}
+
+#start_game:hover {
+	transform: scale(1.05);
+	transition: all 0.2s;
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+#start_game:disabled {
+	transform: scale(1.0);
+	transition: all 0s;
+	cursor: default;
+	opacity: 0.2;
+}
+
+
+.message_text
+{
+    text-align: center;
+    margin:1vh;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+}
