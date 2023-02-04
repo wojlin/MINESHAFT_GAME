@@ -21,10 +21,13 @@ class GameRoom:
         self.host_id = game_host_player_id
         self.players = {game_host_player_id: Player(game_host_player_name, game_host_player_id)}
         self.game_started = False
+        self.status = "waiting for more players"
 
     def add_player_to_room(self, player_id: str, player_name: str):
         self.players[player_id] = Player(player_name, player_id)
         self.players_amount += 1
+        if self.players_amount >= 3:
+            self.status = "waiting on host to start game"
 
     def fetch_status(self):
         players = {player.player_id: player.player_name for index, player in self.players.items()}
@@ -35,7 +38,8 @@ class GameRoom:
                   "game_started": self.game_started,
                   "locked": self.locked,
                   "room_name": self.room_name,
-                  "room_comment": self.room_comment}
+                  "room_comment": self.room_comment,
+                  "status": self.status}
         return status
 
     def info(self):

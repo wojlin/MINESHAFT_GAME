@@ -188,6 +188,7 @@ class GameHandler(object):
             return {"message_type": "error", "message": "only host can start the game"}
 
         room.game_started = True
+        room.status = "in game"
         self.games[room.room_id] = GameEngine.Game(game_id=room.room_id,
                                               config=self.config,
                                               name=room.room_name,

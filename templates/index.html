@@ -16,6 +16,7 @@
             <th>Name:</th>
             <th>Players:</th>
             <th>Comment:</th>
+            <th>Status:</th>
             <th>Locked:</th>
             <th>Join:</th>
         </tr>
@@ -26,6 +27,7 @@
             <td>{{rooms[room].room_name}}</td>
             <td>{{rooms[room].players_amount}}/10</td>
             <td>{{rooms[room].room_comment}}</td>
+            <td>{{rooms[room].status}}</td>
             <td>{{'<img src="static/images/locked.png"/>'|safe if rooms[room].locked else '<img
                     src="static/images/unlocked.png"/>'|safe}}
             </td>

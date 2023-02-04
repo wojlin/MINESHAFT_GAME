@@ -114,6 +114,7 @@ function fetch_rooms_status_handler(data)
             "<td>"+value["room_name"]+"</td>" +
             "<td>"+value["players_amount"]+"/10</td>" +
             "<td>"+value["room_comment"]+"</td>" +
+            "<td>"+value["status"]+"</td>" +
             "<td>";
         if(value["locked"])
         {
@@ -123,10 +124,18 @@ function fetch_rooms_status_handler(data)
         {
             html += "<img src='static/images/unlocked.png'/>";
         }
-
+        let disabled = "";
+        if(value["game_started"] == true)
+        {
+            disabled = "disabled";
+        }
+        if(value["players_amount"] == 10)
+        {
+            disabled = "disabled";
+        }
         html += "</td>" +
             "<td>" +
-            "<button onclick='show_join_room_form(\""+value["room_id"]+"\", \""+value["locked"]+"\");' class='join_button'>join</button>" +
+            "<button onclick='show_join_room_form(\""+value["room_id"]+"\", \""+value["locked"]+"\");' class='join_button' "+disabled+">join</button>" +
             "</td>" +
             "</tr>";
         content.innerHTML += html;

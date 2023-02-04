@@ -14,7 +14,7 @@ h1
     left:0;
     right:0;
     margin:auto;
-    width:90vh;
+    width:110vh;
     height:50vh;
     transform: translate(0, -50%);
     background: var( --background-panel);
@@ -27,7 +27,7 @@ h1
 {
     position:relative;
     display:block;
-    width:90vh;
+    width:110vh;
     margin:auto;
     height:5vh;
     font-size:3vh;
@@ -81,18 +81,22 @@ table tbody tr {
 }
 
 #rooms_table td:nth-child(2), #rooms_table th:nth-child(2){
-  width:20%;
-}
-
-#rooms_table td:nth-child(3), #rooms_table th:nth-child(3){
-  width:40%;
-}
-
-#rooms_table td:nth-child(4), #rooms_table th:nth-child(4){
   width:10%;
 }
 
+#rooms_table td:nth-child(3), #rooms_table th:nth-child(3){
+  width:30%;
+}
+
+#rooms_table td:nth-child(4), #rooms_table th:nth-child(4){
+  width:25%;
+}
+
 #rooms_table td:nth-child(5), #rooms_table th:nth-child(5){
+  width:10%;
+}
+
+#rooms_table td:nth-child(6), #rooms_table th:nth-child(6){
   width:10%;
 }
 
@@ -142,6 +146,13 @@ table tbody tr {
 	transition: all 0.2s;
 	cursor: pointer;
 	opacity: 0.5;
+}
+
+.join_button:disabled {
+	transform: scale(1.0);
+	transition: all 0s;
+	cursor: default;
+	opacity: 0.2;
 }
 
 #gradient
