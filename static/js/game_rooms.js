@@ -72,7 +72,7 @@ function show_join_room_form(room_id, isLocked)
     console.log("showing 'join room' form...");
     document.getElementById("join-password").value = "";
     document.getElementById("join-id").value = "";
-    if(isLocked == "False")
+    if(isLocked == 'false')
     {
         document.getElementById("join-password").style.display = "none";
         document.getElementById("join-password-label").style.display = "none";
@@ -101,3 +101,41 @@ function hide_forms()
     document.getElementById('join_room_div').style.visibility = 'hidden';
     document.getElementById('opacity-div').style.visibility = 'hidden';
 }
+
+function fetch_rooms_status_handler(data)
+{
+    console.log(data);
+    let content = document.querySelector("tbody");
+    content.innerHTML = '';
+
+    for (const [key, value] of Object.entries(data["data"]))
+    {
+        let html = "<tr data-locked='"+value['locked']+"'>" +
+            "<td>"+value["room_name"]+"</td>" +
+            "<td>"+value["players_amount"]+"/10</td>" +
+            "<td>"+value["room_comment"]+"</td>" +
+            "<td>";
+        if(value["locked"])
+        {
+            html += "<img src='static/images/locked.png'/>";
+        }
+        else
+        {
+            html += "<img src='static/images/unlocked.png'/>";
+        }
+
+        html += "</td>" +
+            "<td>" +
+            "<button onclick='show_join_room_form(\""+value["room_id"]+"\", \""+value["locked"]+"\");' class='join_button'>join</button>" +
+            "</td>" +
+            "</tr>";
+        content.innerHTML += html;
+    }
+}
+
+function fetch_rooms_status()
+{
+    get_request("/fetch_rooms_status", fetch_rooms_status_handler);
+}
+
+setInterval(function(){fetch_rooms_status()}, 5000);

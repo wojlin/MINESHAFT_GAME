@@ -32,7 +32,10 @@ class GameRoom:
                   "host_id": self.host_id,
                   "players_amount": self.players_amount,
                   "players": players,
-                  "game_started": self.game_started}
+                  "game_started": self.game_started,
+                  "locked": self.locked,
+                  "room_name": self.room_name,
+                  "room_comment": self.room_comment}
         return status
 
     def info(self):

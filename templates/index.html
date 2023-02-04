@@ -20,7 +20,7 @@
             <th>Join:</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="table_content">
         {% for room in rooms %}
         <tr data-locked="{{rooms[room].locked|safe}}">
             <td>{{rooms[room].room_name}}</td>
@@ -30,7 +30,7 @@
                     src="static/images/unlocked.png"/>'|safe}}
             </td>
             <td>
-                <button onclick="show_join_room_form('{{rooms[room].room_id}}', '{{rooms[room].locked|safe}}');" class="join_button">join</button>
+                <button onclick="show_join_room_form('{{rooms[room].room_id}}', '{{'true' if rooms[room].locked else 'false'}}');" class="join_button">join</button>
             </td>
         </tr>
         {% endfor %}

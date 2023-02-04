@@ -149,6 +149,14 @@ class GameHandler(object):
                         }
                 }
 
+    def fetch_rooms_status(self, data):
+        rooms_status = {}
+        for roomid in self.rooms:
+            room = self.rooms[roomid]
+            rooms_status[room.room_id] = room.fetch_status()
+
+        return {"message_type": "status", "data": rooms_status}
+
     def fetch_room_status(self, data):
 
         if "room_id" not in data:
@@ -197,6 +205,7 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)
         self.add_endpoint(endpoint='/create_room', endpoint_name='create room', handler=self.create_room)
         self.add_endpoint(endpoint='/join_room', endpoint_name='join room', handler=self.join_room)
+        self.add_endpoint(endpoint='/fetch_rooms_status', endpoint_name='fetch rooms status', handler=self.fetch_rooms_status)
         self.add_endpoint(endpoint='/room', endpoint_name='room', handler=self.room)
         self.add_endpoint(endpoint='/room/fetch_room_status', endpoint_name='fetch room status', handler=self.fetch_room_status)
         self.add_endpoint(endpoint='/room/start_game', endpoint_name='start game', handler=self.start_game)
