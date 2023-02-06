@@ -69,6 +69,8 @@ class TunnelCard(Card):
         self.overwrite = overwrite
         self.empty = empty
         self.__card_name = card_name
+        self.goal = card_name
+        self.end_card = False
 
         if self.__card_name == "false" or self.__card_name == "true":
             self.end_card = True

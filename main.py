@@ -218,6 +218,8 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
         self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)
         self.add_endpoint(endpoint='/game/is_move_correct', endpoint_name='is move correct', handler=self.is_move_correct)
+        self.add_endpoint(endpoint='/game/round_end', endpoint_name='round end', handler=self.round_end)
+        self.add_endpoint(endpoint='/game/leaderboard', endpoint_name='leaderboard', handler=self.leaderboard)
 
     def run_api(self):
         self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
@@ -332,9 +334,32 @@ class GameHandler(object):
         else:
             raise Exception("incorrect card type")
 
+        game_won = game.check_winning_conditions()
+        if game_won:
+            print(f"{player.player_name} won this round!")
+
         print(game.end_turn())
 
         return {"message_type": "info", "message": f"you ended turn!"}
+
+    def round_end(self, data):
+        if "game_id" not in data or "player_id" not in data:
+            return {"message_type": "error", "message": "game parameters not exist in request"}
+
+        if "player_id" not in data:
+            return {"message_type": "error", "message": "player parameters not exist in request"}
+
+        game = self.games[data["game_id"]]
+
+        if data["player_id"] not in game.players:
+            return {"message_type": "error", "message": "player not found"}
+
+        player = game.players[data['player_id']]
+
+        return render_template("round_end.html", game=game, player=player)
+
+    def leaderboard(self, data):
+        return render_template("leaderboard.html")
 
     def is_move_correct(self, data):
         try:
@@ -442,7 +467,7 @@ class GameHandler(object):
         cards = game.players[data["player_id"]].player_cards
 
         player_cards = {f"slot_{cards.index(card)}": card.card_info for card in cards}
-
+        round_ended = game.round_ended
         return {"message_type": "game_status_data",
                 "game_turn": game.turn,
                 "cards_left": len(game.cards),
@@ -450,7 +475,8 @@ class GameHandler(object):
                 "players_actions": players_actions,
                 "board": [[game.board[y][x].picture_url for x in range(game.BOARD_SIZE_X)] for y in range(game.BOARD_SIZE_Y)],
                 "player_cards": player_cards,
-                "players_ranks": players_ranks}
+                "players_ranks": players_ranks,
+                "round_ended": round_ended}
 
 
 if __name__ == "__main__":

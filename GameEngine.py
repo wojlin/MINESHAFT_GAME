@@ -42,6 +42,8 @@ class GameEngine:
         self.round = 1
         self.ROUNDS_AMOUNT = 3
 
+        self.round_ended = False
+
         self.EMPTY_CARD = Cards.TunnelCard(False, False, False, False, True, True, True, 'empty')
         self.board = self.__create_game_board()
         self.grid = self.__create_pathfinding_grid()
@@ -177,7 +179,38 @@ class Game(GameEngine):
         for card in self.players[player_id].player_cards:
             print(card.info())
 
+    def check_winning_conditions(self):
+        for y in range(self.BOARD_SIZE_Y):
+            for x in range(self.BOARD_SIZE_X):
+                card = self.board[y][x]
+                if card.end_card and card.goal == "true":
+                    if self.board[y][x - 1].way_right:
+                        return True
+                    if self.board[y - 1][x].way_bottom:
+                        return True
+                    if self.board[y][x + 1].way_left:
+                        return True
+                    if self.board[y + 1][x].way_top:
+                        return True
+        return False
+
     def end_turn(self):
+
+        for y in range(self.BOARD_SIZE_Y):
+            for x in range(self.BOARD_SIZE_X):
+                card = self.board[y][x]
+                if card.end_card:
+                    if self.board[y][x-1].way_right:
+                        card.picture_url = card.goal + ".png"
+                    if self.board[y-1][x].way_bottom:
+                        card.picture_url = card.goal + ".png"
+                    if self.board[y][x+1].way_left:
+                        card.picture_url = card.goal + ".png"
+                    if self.board[y+1][x].way_top:
+                        card.picture_url = card.goal + ".png"
+
+        self.round_ended = self.check_winning_conditions()
+        
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) -1 else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
         return f"turn ended, now its '{self.players[self.turn].player_name}' turn"
