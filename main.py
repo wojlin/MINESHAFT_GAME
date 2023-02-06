@@ -1,5 +1,7 @@
 import copy
 import logging
+import time
+
 from flask import Flask, Response, render_template, request
 from typing import Dict
 import threading
@@ -36,7 +38,7 @@ class GameHandler(object):
         self.app = Flask(name)
         self.add_endpoints()
         threading.Thread(target=self.run_api, args=()).start()
-
+        time.sleep(0.5)
         self.games: Dict[str, GameEngine.Game] = {}
         self.rooms: Dict[str, GameRoom] = {}
 
@@ -55,11 +57,13 @@ class GameHandler(object):
 
             for x in range(5):
                 new_id = str(uuid.uuid4())
-                players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id)
+                players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id, config=self.config)
 
             self.__crate_game(name="test game", players=players, config=self.config)
 
             for game in self.games:
+                for player in self.games[game].players:
+                    self.games[game].players[player].upgrade_rank(0)
                 print(self.games[game].info())
                 with open("path.txt", 'w') as file:
                     file.write(self.games[game].pathfinding_grid_info())
@@ -431,6 +435,10 @@ class GameHandler(object):
         for player_id, player_obj in game.players.items():
             players_actions[player_id] = player_obj.player_actions
 
+        players_ranks = {}
+        for player_id, player_obj in game.players.items():
+            players_ranks[player_id] = {"rank": player_obj.rank, "rank_url": player_obj.rank_url}
+
         cards = game.players[data["player_id"]].player_cards
 
         player_cards = {f"slot_{cards.index(card)}": card.card_info for card in cards}
@@ -441,7 +449,8 @@ class GameHandler(object):
                 "game_round": game.round,
                 "players_actions": players_actions,
                 "board": [[game.board[y][x].picture_url for x in range(game.BOARD_SIZE_X)] for y in range(game.BOARD_SIZE_Y)],
-                "player_cards": player_cards}
+                "player_cards": player_cards,
+                "players_ranks": players_ranks}
 
 
 if __name__ == "__main__":

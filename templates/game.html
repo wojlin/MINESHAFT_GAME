@@ -74,7 +74,13 @@
         {% for player in game.players %}
             <div id="player_{{game.players[player].player_id}}" class="players-panel">
                 <div class="players-panel_turn" id="players_{{game.players[player].player_id}}_turn"></div>
-                <p id="{{game.players[player].player_id}}_name">{{game.players[player].player_name}}</p>
+                <div class="player_panel_info">
+                    <p id="{{game.players[player].player_id}}_name">{{game.players[player].player_name}}</p>
+                    <img class="player_rank_img"  data-playerid="{{game.players[player].player_id}}" id="{{game.players[player].player_id}}_rank_img" src="{{game.players[player].rank_url}}" alt="" />
+                </div>
+                <div class="player_rank_container">
+                    <p>rank:<span class="player_rank" data-playerid="{{game.players[player].player_id}}" id="{{game.players[player].player_id}}_rank_text">{{game.players[player].rank}}</span></p>
+                </div>
                 <table class="players-panel_turn_actions">
                     <tr>
                         {% for action_number in range(game.ACTION_CARDS_TYPES_AMOUNT) %}

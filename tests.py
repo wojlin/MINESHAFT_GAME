@@ -16,7 +16,7 @@ def create_game(players_amount: int):
 
     for x in range(players_amount):
         new_id = str(uuid.uuid4())
-        players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id)
+        players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id, config=config)
 
     game_id = str(uuid.uuid4())
     game = GameEngine.Game('test game', game_id, players, config)

@@ -13,12 +13,14 @@ function update_game_status(message)
     }else if(message["message_type"] == "game_status_data")
     {
         //console.log("fetched game status...")
+        //console.log(message)
 
         let arrows = document.getElementsByClassName("players-panel_turn");
         for (var i = 0; i < arrows.length; i++) {
 
            arrows[i].style.visibility = "hidden";
         }
+
 
         document.getElementById("players_"+message["game_turn"]+"_turn").style.visibility = "visible";
         document.getElementById("action-panel-cards_deck-cards_left_text").innerHTML = message["cards_left"];
@@ -56,6 +58,21 @@ function update_game_status(message)
             }
 
             players_actions[i].src = exp;
+        }
+
+
+        let players_rank_img = document.getElementsByClassName("player_rank_img");
+        for (var i = 0; i < players_rank_img.length; i++)
+        {
+            let player_id = players_rank_img[i].dataset.playerid;
+            players_rank_img[i].src = message["players_ranks"][player_id]["rank_url"];
+        }
+
+        let players_rank = document.getElementsByClassName("player_rank");
+        for (var i = 0; i < players_rank.length; i++)
+        {
+            let player_id = players_rank[i].dataset.playerid;
+            players_rank[i].innerHTML = message["players_ranks"][player_id]["rank"];
         }
 
         let cells = document.getElementsByClassName("cell_img");

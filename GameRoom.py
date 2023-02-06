@@ -19,12 +19,12 @@ class GameRoom:
         self.locked = True if self.room_password else False
         self.players_amount = 1
         self.host_id = game_host_player_id
-        self.players = {game_host_player_id: Player(game_host_player_name, game_host_player_id)}
+        self.players = {game_host_player_id: Player(game_host_player_name, game_host_player_id, self.config)}
         self.game_started = False
         self.status = "waiting for more players"
 
     def add_player_to_room(self, player_id: str, player_name: str):
-        self.players[player_id] = Player(player_name, player_id)
+        self.players[player_id] = Player(player_name, player_id, self.config)
         self.players_amount += 1
         if self.players_amount >= 3:
             self.status = "waiting on host to start game"

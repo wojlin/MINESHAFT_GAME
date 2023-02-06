@@ -1,5 +1,5 @@
 class Player:
-    def __init__(self, player_name, player_id):
+    def __init__(self, player_name, player_id, config):
         self.player_name = player_name
         self.player_id = player_id
 
@@ -7,9 +7,18 @@ class Player:
 
         self.player_cards = []
         self.player_actions = []
+        self.rank = 1
+        self.rank_url = self.return_rank_url()
 
     def add_actions(self, amount):
         self.player_actions = [True for x in range(amount)]
+
+    def upgrade_rank(self, amount):
+        self.rank += amount
+        self.rank_url = self.return_rank_url()
+
+    def return_rank_url(self):
+        return f"static/images/rank_{self.rank}.svg"
 
 
 
