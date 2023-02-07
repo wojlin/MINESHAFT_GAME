@@ -55,15 +55,14 @@ class GameHandler(object):
                                                room_password="1234" if x % 3 == 0 else '',
                                                config=self.config)
 
-            for x in range(5):
+            for x in range(8):
                 new_id = str(uuid.uuid4())
                 players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id, config=self.config)
+                players[new_id].upgrade_rank(x+x % 2)
 
             self.__crate_game(name="test game", players=players, config=self.config)
 
             for game in self.games:
-                for player in self.games[game].players:
-                    self.games[game].players[player].upgrade_rank(0)
                 print(self.games[game].info())
                 with open("path.txt", 'w') as file:
                     file.write(self.games[game].pathfinding_grid_info())
@@ -359,7 +358,14 @@ class GameHandler(object):
         return render_template("round_end.html", game=game, player=player)
 
     def leaderboard(self, data):
-        return render_template("leaderboard.html")
+        if "game_id" not in data:
+            return {"message_type": "error", "message": "game parameters not exist in request"}
+        if data["game_id"] not in self.games:
+            return render_template("game_not_found.html")
+
+        game = self.games[data["game_id"]]
+
+        return render_template("leaderboard.html", game=game)
 
     def is_move_correct(self, data):
         try:

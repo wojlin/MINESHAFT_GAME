@@ -164,6 +164,7 @@ class Game(GameEngine):
         if creation_rules[const.MESSAGE_TYPE] == const.ERROR_MESSAGE:
             raise const.InvalidMountOfPlayersException
         GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config)
+        self.update_leaderboard()
 
     def give_card_from_stack(self, player_id, card_id):
         for card in self.players[player_id].player_cards:
@@ -178,6 +179,20 @@ class Game(GameEngine):
         print()
         for card in self.players[player_id].player_cards:
             print(card.info())
+
+    def update_leaderboard(self):
+        positions = []
+        for player in self.players:
+            current_player = self.players[player]
+            positions.append(current_player.rank)
+        positions = list(set(positions))
+        positions = sorted(positions, reverse=True)
+
+        for player in self.players:
+            current_player = self.players[player]
+            pos = positions.index(current_player.rank) + 1
+            current_player.leaderboard_pos = pos
+
 
     def check_winning_conditions(self):
         for y in range(self.BOARD_SIZE_Y):
@@ -210,7 +225,7 @@ class Game(GameEngine):
                         card.picture_url = card.goal + ".png"
 
         self.round_ended = self.check_winning_conditions()
-        
+        self.update_leaderboard()
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) -1 else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
         return f"turn ended, now its '{self.players[self.turn].player_name}' turn"
@@ -340,9 +355,15 @@ class Game(GameEngine):
             url_base = f"http://{self.config['host']}:{self.config['port']}/game"
             url_args = f"?game_id={self.game_id}&player_id={player.player_id}"
 
-            info_str += f"name: {player.player_name}     id: {player.player_id}     url: {url_base + url_args}\n"
+            info_str += f"name: {player.player_name}     id: {player.player_id}   rank:{player.rank}   leaderboard_pos:{player.leaderboard_pos}    url: {url_base + url_args}\n"
 
         info_str += "]\n"
+
+        url_base = f"http://{self.config['host']}:{self.config['port']}/game/leaderboard"
+        url_args = f"?game_id={self.game_id}"
+        info_str += f"leaderboard: {url_base}{url_args}"
+
+        info_str += "\n"
 
         return info_str
 

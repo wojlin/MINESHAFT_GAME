@@ -1,0 +1,40 @@
+#content
+{
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    margin:auto;
+    width:fit-content;
+    height:fit-content;
+    transform: translate(0, -50%);
+    background: var( --background-panel);
+    border: solid 0.5vh var(--border-color);
+    overflow: hidden;
+    border-radius:2vh;
+    padding:3vh;
+}
+
+#leaderboard-list
+{
+    margin:auto;
+    width:30vh;
+    height:fit-content;
+    overflow-x:hidden;
+    overflow-y:auto;
+    background:rgba(255,255,255,0.1);
+    border-radius:1vh;
+}
+
+.leaderboard-list-element
+{
+    border-bottom: solid 0.2vh rgba(255,255,255,0.3);
+    font-size:2vh;
+    margin:1vh;
+}
+
+.leaderboard-list-element:last-child
+{
+    border:none;
+    margin-bottom:0vh;
+}

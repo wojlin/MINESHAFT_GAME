@@ -7,6 +7,7 @@ class Player:
 
         self.player_cards = []
         self.player_actions = []
+        self.leaderboard_pos = 0
         self.rank = 1
         self.rank_url = self.return_rank_url()
 
