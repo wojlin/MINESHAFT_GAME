@@ -13,6 +13,8 @@
     overflow: hidden;
     border-radius:2vh;
     padding:3vh;
+    padding-left:6vh;
+    padding-right:6vh;
 }
 
 #leaderboard-list
@@ -24,6 +26,7 @@
     overflow-y:auto;
     background:rgba(255,255,255,0.1);
     border-radius:1vh;
+    border-collapse: collapse;
 }
 
 .leaderboard-list-element
@@ -31,10 +34,63 @@
     border-bottom: solid 0.2vh rgba(255,255,255,0.3);
     font-size:2vh;
     margin:1vh;
+    position:relative;
 }
 
 .leaderboard-list-element:last-child
 {
     border:none;
     margin-bottom:0vh;
+}
+
+.leaderboard-list-element > td
+{
+    height:4vh;
+}
+
+th, td
+{
+    text-align:left;
+    padding-left:1vh;
+}
+
+h1
+{
+    text-align:center;
+    font-size:5vh;
+    margin-bottom:2vh;
+}
+
+.crown
+{
+    position:absolute;
+    width:3vh;
+    height:3vh;
+    left:-4vh;
+    top:0.5vh;
+}
+
+
+a {
+	width: 20vh;
+	background: rgba(0,0,0,0.2);
+	border: solid 0.2vh rgba(255,255,255,0.5);
+	border-radius: 0.5vh;
+	line-height: 1.5vh;
+	font-size: 2vh;
+	height: 3vh;
+	margin:auto;
+	margin-top:2vh;
+	display: block;
+	text-align:center;
+	line-height:2.5vh;
+	text-decoration: none;
+	color: inherit;
+}
+
+a:hover {
+	transform: scale(1.05);
+	transition: all 0.2s;
+	cursor: pointer;
+	opacity: 0.5;
 }
