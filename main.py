@@ -2,7 +2,7 @@ import copy
 import logging
 import time
 
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, send_from_directory
 from typing import Dict
 import threading
 import uuid
@@ -69,6 +69,41 @@ class GameHandler(object):
 
             for room in self.rooms:
                 print(self.rooms[room].info())
+
+
+
+    def __crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
+        game_id = str(uuid.uuid4())
+        self.games[game_id] = GameEngine.Game(name, game_id, players, config)
+
+    def add_endpoints(self):
+        self.add_endpoint(endpoint='/favicon.ico', endpoint_name='favicon', handler=self.favicon)
+        self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)
+        self.add_endpoint(endpoint='/create_room', endpoint_name='create room', handler=self.create_room)
+        self.add_endpoint(endpoint='/join_room', endpoint_name='join room', handler=self.join_room)
+        self.add_endpoint(endpoint='/fetch_rooms_status', endpoint_name='fetch rooms status', handler=self.fetch_rooms_status)
+        self.add_endpoint(endpoint='/room', endpoint_name='room', handler=self.room)
+        self.add_endpoint(endpoint='/room/fetch_room_status', endpoint_name='fetch room status', handler=self.fetch_room_status)
+        self.add_endpoint(endpoint='/room/start_game', endpoint_name='start game', handler=self.start_game)
+        self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
+        self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
+        self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)
+        self.add_endpoint(endpoint='/game/is_move_correct', endpoint_name='is move correct', handler=self.is_move_correct)
+        self.add_endpoint(endpoint='/game/round_end', endpoint_name='round end', handler=self.round_end)
+        self.add_endpoint(endpoint='/game/leaderboard', endpoint_name='leaderboard', handler=self.leaderboard)
+
+    def run_api(self):
+        self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
+
+    def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
+        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler))
+
+    def index(self, *args, **kwargs):
+        return render_template('index.html', rooms=self.rooms)
+
+    def favicon(self, *args, **kwargs):
+        return send_from_directory(os.path.join(self.app.root_path, 'static'),
+                                   'images/favicon.png', mimetype='image/vnd.microsoft.icon')
 
     def room(self, data):
         if "player_id" not in data:
@@ -200,34 +235,6 @@ class GameHandler(object):
         status = room.fetch_status()
 
         return {"message_type": "status", "data": status}
-
-    def __crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
-        game_id = str(uuid.uuid4())
-        self.games[game_id] = GameEngine.Game(name, game_id, players, config)
-
-    def add_endpoints(self):
-        self.add_endpoint(endpoint='/', endpoint_name='index', handler=self.index)
-        self.add_endpoint(endpoint='/create_room', endpoint_name='create room', handler=self.create_room)
-        self.add_endpoint(endpoint='/join_room', endpoint_name='join room', handler=self.join_room)
-        self.add_endpoint(endpoint='/fetch_rooms_status', endpoint_name='fetch rooms status', handler=self.fetch_rooms_status)
-        self.add_endpoint(endpoint='/room', endpoint_name='room', handler=self.room)
-        self.add_endpoint(endpoint='/room/fetch_room_status', endpoint_name='fetch room status', handler=self.fetch_room_status)
-        self.add_endpoint(endpoint='/room/start_game', endpoint_name='start game', handler=self.start_game)
-        self.add_endpoint(endpoint='/game', endpoint_name='game', handler=self.game)
-        self.add_endpoint(endpoint='/game/end_turn', endpoint_name='end turn', handler=self.end_turn)
-        self.add_endpoint(endpoint='/game/fetch_game_status', endpoint_name='fetch game status', handler=self.fetch_game_status)
-        self.add_endpoint(endpoint='/game/is_move_correct', endpoint_name='is move correct', handler=self.is_move_correct)
-        self.add_endpoint(endpoint='/game/round_end', endpoint_name='round end', handler=self.round_end)
-        self.add_endpoint(endpoint='/game/leaderboard', endpoint_name='leaderboard', handler=self.leaderboard)
-
-    def run_api(self):
-        self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
-
-    def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
-        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler))
-
-    def index(self, *args, **kwargs):
-        return render_template('index.html', rooms=self.rooms)
 
     def game(self, data: dict):
         if "game_id" not in data or "player_id" not in data:

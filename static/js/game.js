@@ -19,7 +19,14 @@ function update_game_status(message)
         {
             let game_id = document.getElementById("data-game_id").innerHTML;
             let player_id = document.getElementById("data-player_id").innerHTML;
-            window.location.href = "/game/round_end?game_id=" + game_id + "&player_id=" + player_id;
+            if(message["game_round"] == 3)
+            {
+                window.location.href = "/game/leaderboard?game_id=" + game_id;
+            }
+            else
+            {
+                window.location.href = "/game/round_end?game_id=" + game_id + "&player_id=" + player_id;
+            }
         }
 
         let arrows = document.getElementsByClassName("players-panel_turn");
