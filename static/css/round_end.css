@@ -1,0 +1,43 @@
+#content
+{
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    margin:auto;
+    width:fit-content;
+    height:fit-content;
+    transform: translate(0, -50%);
+    background: var( --background-panel);
+    border: solid 0.5vh var(--border-color);
+    overflow: hidden;
+    border-radius:2vh;
+    padding:3vh;
+    padding-left:6vh;
+    padding-right:6vh;
+}
+
+
+#players-panel
+{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    width: 15%;
+    height:30vh;
+    border-left: solid 0.5vh var(--border-color);
+    display: grid;
+    grid-template-rows: repeat(1fr, 0);
+    background: var(--background-panel);
+}
+
+.players-panel
+{
+    height:100%;
+    border: solid 0.3vh var(--border-color);
+    position: relative;
+    font-size: 3vh;
+    text-align:center;
+    padding-top:1vh;
+}

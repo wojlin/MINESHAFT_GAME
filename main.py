@@ -364,7 +364,7 @@ class GameHandler(object):
 
         player = game.players[data['player_id']]
 
-        return render_template("round_end.html", game=game, player=player)
+        return render_template("round_end.html", game=game, player=player, gameid=data["game_id"], playerid=data["player_id"])
 
     def leaderboard(self, data):
         if "game_id" not in data:

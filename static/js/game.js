@@ -15,19 +15,7 @@ function update_game_status(message)
         //console.log("fetched game status...")
         //console.log(message)
 
-        if(message["round_ended"] == true)
-        {
-            let game_id = document.getElementById("data-game_id").innerHTML;
-            let player_id = document.getElementById("data-player_id").innerHTML;
-            if(message["game_round"] == 3)
-            {
-                window.location.href = "/game/leaderboard?game_id=" + game_id;
-            }
-            else
-            {
-                window.location.href = "/game/round_end?game_id=" + game_id + "&player_id=" + player_id;
-            }
-        }
+
 
         let arrows = document.getElementsByClassName("players-panel_turn");
         for (var i = 0; i < arrows.length; i++) {
@@ -99,6 +87,8 @@ function update_game_status(message)
 
         if(turnEnd == true)
         {
+            window.location.reload();
+            // delete rest
             let cards = document.getElementsByClassName("player-card-img");
 
             let cardHolders = {};
@@ -129,7 +119,13 @@ function update_game_status(message)
         }
 
 
+        if(message["round_ended"] == true)
+        {
+            let game_id = document.getElementById("data-game_id").innerHTML;
+            let player_id = document.getElementById("data-player_id").innerHTML;
+            setTimeout(() => { window.location.href = "/game/round_end?game_id=" + game_id + "&player_id=" + player_id; }, 2000);
 
+        }
 
     }
     else

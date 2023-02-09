@@ -1,4 +1,5 @@
 from typing import Dict
+import threading
 import random
 import math
 import copy
@@ -8,8 +9,8 @@ import Cards
 from Player import Player
 
 
-class GameEngine:
-    def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
+class GameEngine(object):
+    def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict, round: int):
         self.BOARD_SIZE_X = 12
         self.BOARD_SIZE_Y = 9
         self.name = name
@@ -39,7 +40,7 @@ class GameEngine:
         self.current_turn_num = 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
 
-        self.round = 1
+        self.round = round
         self.ROUNDS_AMOUNT = 3
 
         self.round_ended = False
@@ -70,6 +71,8 @@ class GameEngine:
                                        empty=False,
                                        card_name="start")
 
+        picked = random.choice([0, 1, 2])
+
         board[2][10] = Cards.TunnelCard(way_top=True,
                                        way_right=True,
                                        way_bottom=True,
@@ -77,7 +80,7 @@ class GameEngine:
                                        destructible=False,
                                        overwrite=False,
                                        empty=False,
-                                       card_name="false")
+                                       card_name="true" if picked == 0 else "false")
 
         board[4][10] = Cards.TunnelCard(way_top=True,
                                         way_right=True,
@@ -86,7 +89,7 @@ class GameEngine:
                                         destructible=False,
                                         overwrite=False,
                                         empty=False,
-                                        card_name="true")
+                                        card_name="true" if picked == 1 else "false")
 
         board[6][10] = Cards.TunnelCard(way_top=True,
                                         way_right=True,
@@ -95,7 +98,7 @@ class GameEngine:
                                         destructible=False,
                                         overwrite=False,
                                         empty=False,
-                                        card_name="false")
+                                        card_name="true" if picked == 2 else "false")
 
         return board
 
@@ -163,7 +166,7 @@ class Game(GameEngine):
         creation_rules = self.check_game_creation_rules(players)
         if creation_rules[const.MESSAGE_TYPE] == const.ERROR_MESSAGE:
             raise const.InvalidMountOfPlayersException
-        GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config)
+        self.game_engine = GameEngine.__init__(self, name=name, game_id=game_id, players=players, config=config, round=1)
         self.update_leaderboard()
 
     def give_card_from_stack(self, player_id, card_id):
@@ -212,7 +215,7 @@ class Game(GameEngine):
 
     def dispose_ranks(self, winning_player_id, winning_team):
 
-        ranks = [random.randint(1, 5) for x in range(len(self.players) - self.SABOTEUR_AMOUNT + 1)]
+        ranks = [random.randint(1, 4) for x in range(len(self.players) - self.SABOTEUR_AMOUNT + 1)]
 
         for player_id in self.players:
             player = self.players[player_id]
@@ -252,11 +255,19 @@ class Game(GameEngine):
         if self.round_ended:
             winning_team = self.BAD_PLAYER if len(self.cards) == 0 else self.GOOD_PLAYER
             self.dispose_ranks(player_id, winning_team)
+            threading.Timer(10, self.prepare_next_round).start()
 
         self.update_leaderboard()
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) -1 else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
         return f"turn ended, now its '{self.players[self.turn].player_name}' turn"
+
+    def prepare_next_round(self):
+        self.round_ended = False
+        self.round += 1
+
+        self.game_engine = GameEngine.__init__(self, name=self.name, game_id=self.game_id, players=self.players, config=self.config, round=self.round)
+        print(f"started round {self.round}!")
 
     def check_game_creation_rules(self, players):
         if len(players) < const.MIN_AMOUNT_OF_PLAYERS:
@@ -387,8 +398,10 @@ class Game(GameEngine):
 
         url_base = f"http://{self.config['host']}:{self.config['port']}/game/leaderboard"
         url_args = f"?game_id={self.game_id}"
-        info_str += f"leaderboard: {url_base}{url_args}"
-
+        info_str += f"leaderboard: {url_base}{url_args}\n"
+        url_base = f"http://{self.config['host']}:{self.config['port']}/game/round_end"
+        url_args = f"?game_id={self.game_id}&player_id={list(self.players.values())[0].player_id}"
+        info_str += f"round_end: {url_base}{url_args}\n"
         info_str += "\n"
 
         return info_str

@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>ROUND END</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inheritance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/round_end.css') }}">
 </head>
-<body>
+<body data-gameid="{{gameid}}" data-playerid="{{playerid}}" data-round="{{game.round}}">
+<div id="content">
+    <h1>Round {{game.round}}/{{game.ROUNDS_AMOUNT}} Summary</h1>
+    <div id="players-panel">
+        {% for player in game.players %}
+        <div class="players-panel">
+            <p>{{game.players[player].player_name}}</p>
+            <p>{{game.players[player].rank}}</p>
+        </div>
+        {% endfor %}
+    </div>
 
+
+    {% if game.round < 3 %}
+    <p>round {{game.round+1}} will start in: <span id="counter">30</span>s</p>
+    {% else %}
+    <p>leaderboard will be displayed: <span id="counter">30</span>s</p>
+    {% endif %}
+</div>
+<script src="{{url_for('static', filename='js/round_end.js')}}"></script>
 </body>
 </html>
