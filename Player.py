@@ -9,12 +9,14 @@ class Player:
         self.player_actions = []
         self.leaderboard_pos = 0
         self.rank = 1
+        self.last_player_rank = self.rank
         self.rank_url = self.return_rank_url()
 
     def add_actions(self, amount):
         self.player_actions = [True for x in range(amount)]
 
     def upgrade_rank(self, amount):
+        self.last_player_rank = self.rank
         self.rank += amount
         self.rank_url = self.return_rank_url()
 

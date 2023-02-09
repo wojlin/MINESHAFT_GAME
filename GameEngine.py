@@ -193,7 +193,6 @@ class Game(GameEngine):
             pos = positions.index(current_player.rank) + 1
             current_player.leaderboard_pos = pos
 
-
     def check_winning_conditions(self):
         for y in range(self.BOARD_SIZE_Y):
             for x in range(self.BOARD_SIZE_X):
@@ -207,9 +206,34 @@ class Game(GameEngine):
                         return True
                     if self.board[y + 1][x].way_top:
                         return True
+        if len(self.cards) == 0:
+            return True
         return False
 
-    def end_turn(self):
+    def dispose_ranks(self, winning_player_id, winning_team):
+
+        ranks = [random.randint(1, 5) for x in range(len(self.players) - self.SABOTEUR_AMOUNT + 1)]
+
+        for player_id in self.players:
+            player = self.players[player_id]
+            if player.player_id == winning_player_id:
+                if player.player_role == winning_team and winning_team == self.GOOD_PLAYER:
+                    top_rank = max(ranks)
+                    player.upgrade_rank(top_rank)
+                    ranks.pop(ranks.index(top_rank))
+
+        for player_id in self.players:
+            player = self.players[player_id]
+            if player.player_role == winning_team and winning_team == self.BAD_PLAYER:
+                player.upgrade_rank(int(math.floor(12/len(self.players))))
+            if player.player_role == winning_team and winning_team == self.GOOD_PLAYER:
+                rank = random.choice(ranks)
+                player.upgrade_rank(rank)
+                ranks.pop(ranks.index(rank))
+
+        self.update_leaderboard()
+
+    def end_turn(self, player_id):
 
         for y in range(self.BOARD_SIZE_Y):
             for x in range(self.BOARD_SIZE_X):
@@ -225,6 +249,10 @@ class Game(GameEngine):
                         card.picture_url = card.goal + ".png"
 
         self.round_ended = self.check_winning_conditions()
+        if self.round_ended:
+            winning_team = self.BAD_PLAYER if len(self.cards) == 0 else self.GOOD_PLAYER
+            self.dispose_ranks(player_id, winning_team)
+
         self.update_leaderboard()
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) -1 else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
@@ -256,8 +284,6 @@ class Game(GameEngine):
             return False
         if place.empty is False and place.destructible is False and card.overwrite is False:
             return False
-
-
 
         test_card_top = None
         test_card_right = None

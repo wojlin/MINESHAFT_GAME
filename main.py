@@ -55,15 +55,17 @@ class GameHandler(object):
                                                room_password="1234" if x % 3 == 0 else '',
                                                config=self.config)
 
-            for x in range(8):
+            for x in range(5):
                 new_id = str(uuid.uuid4())
                 players[new_id] = GameEngine.Player(player_name=f"player_{x}", player_id=new_id, config=self.config)
-                players[new_id].upgrade_rank(x+x % 2)
+                #players[new_id].upgrade_rank(x+x % 2)
+
 
             self.__crate_game(name="test game", players=players, config=self.config)
 
             for game in self.games:
                 print(self.games[game].info())
+                self.games[game].dispose_ranks(list(self.games[game].players.items())[0], self.games[game].GOOD_PLAYER)
                 with open("path.txt", 'w') as file:
                     file.write(self.games[game].pathfinding_grid_info())
 
@@ -344,7 +346,7 @@ class GameHandler(object):
         if game_won:
             print(f"{player.player_name} won this round!")
 
-        print(game.end_turn())
+        print(game.end_turn(player.player_id))
 
         return {"message_type": "info", "message": f"you ended turn!"}
 
