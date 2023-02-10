@@ -1,3 +1,8 @@
+:root {
+    --rank_x: 0px;
+    --rank_y: 0px;
+}
+
 #content
 {
     position: absolute;
@@ -44,10 +49,22 @@ h1
     margin-bottom:2vh;
 }
 
-.rank
+
+.role
 {
     position:absolute;
     bottom:1vh;
+    left:0;
+    right:0;
+    margin:auto;
+    text-align:center;
+    font-size:2vh;
+}
+
+.rank
+{
+    position:absolute;
+    bottom:4vh;
     left:0;
     right:0;
     margin:auto;
@@ -72,7 +89,7 @@ h1
     display:block;
     width:8vh;
     height:8vh;
-    margin-top:1vh;
+    margin-top:0.5vh;
 
 }
 
@@ -84,4 +101,26 @@ h1
     height:15vh;
     margin-top:5vh;
     margin-bottom:3vh;
+}
+
+.rank_animated
+{
+    position:absolute;
+    width:7vh;
+    height:7vh;
+    left:0px;
+    top:0px;
+    animation:
+    x 1s linear infinite alternate, y 1s infinite cubic-bezier(.55,.06,.68,.19)
+}
+
+@keyframes x {
+   to {
+     left:var(--rank_x);
+   }
+}
+@keyframes y {
+   to {
+     top:var(--rank_y);
+   }
 }

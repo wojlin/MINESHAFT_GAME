@@ -17,7 +17,8 @@ class Player:
                 "rank": self.rank,
                 "last_player_rank": self.last_player_rank,
                 "rank_url": self.return_rank_url(),
-                "last_player_rank_url": self.return_last_player_rank_url()}
+                "last_player_rank_url": self.return_last_player_rank_url(),
+                "player_role": self.player_role}
 
     def add_actions(self, amount):
         self.player_actions = [True for x in range(amount)]
@@ -28,9 +29,9 @@ class Player:
         self.rank_url = self.return_rank_url()
 
     def return_rank_url(self):
-        return f"static/images/rank_{self.rank}.svg"
+        return f"/static/images/rank_{self.rank}.svg"
 
     def return_last_player_rank_url(self):
-        return f"static/images/rank_{self.rank}.svg"
+        return f"/static/images/rank_{self.rank}.svg"
 
 
