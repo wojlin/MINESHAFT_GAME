@@ -6,23 +6,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inheritance.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/round_end.css') }}">
 </head>
-<body data-gameid="{{gameid}}" data-playerid="{{playerid}}" data-round="{{game.round}}">
+<body data-gameid="{{gameid}}" data-playerid="{{playerid}}" data-round="{{game.round}}" data-players_data="{{players_data}}">
 <div id="content">
-    <h1>Round {{game.round}}/{{game.ROUNDS_AMOUNT}} Summary</h1>
+    <h1>Round {{game.round}}/{{game.ROUNDS_AMOUNT}} summary</h1>
+    <img id="purse" src="{{ url_for('static', filename='images/purse.png') }}" alt=""/>
     <div id="players-panel">
         {% for player in game.players %}
         <div class="players-panel">
             <p>{{game.players[player].player_name}}</p>
-            <p>{{game.players[player].rank}}</p>
+            <img class="rank_img" id="{{game.players[player].player_id}}_rank" src="/static/images/rank_{{game.players[player].last_player_rank}}.svg" alt=""/>
+            <p class="rank">rank: <span>{{game.players[player].last_player_rank}}</span></p>
         </div>
         {% endfor %}
     </div>
 
 
     {% if game.round < 3 %}
-    <p>round {{game.round+1}} will start in: <span id="counter">30</span>s</p>
+    <p id="timer">round {{game.round+1}} will start in: <span id="counter">30</span>s</p>
     {% else %}
-    <p>leaderboard will be displayed: <span id="counter">30</span>s</p>
+    <p id="timer">leaderboard will be displayed: <span id="counter">30</span>s</p>
     {% endif %}
 </div>
 <script src="{{url_for('static', filename='js/round_end.js')}}"></script>

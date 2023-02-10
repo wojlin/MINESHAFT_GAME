@@ -1,14 +1,12 @@
-import copy
-import logging
-import time
-
 from flask import Flask, Response, render_template, request, send_from_directory
 from typing import Dict
 import threading
 import uuid
 import json
+import copy
+import logging
+import time
 import sys
-import ast
 import os
 
 import GameEngine
@@ -17,6 +15,7 @@ import Cards
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+
 
 class EndpointAction(object):
 
@@ -364,7 +363,17 @@ class GameHandler(object):
 
         player = game.players[data['player_id']]
 
-        return render_template("round_end.html", game=game, player=player, gameid=data["game_id"], playerid=data["player_id"])
+        players_data = {}
+
+        for player in game.players:
+            players_data[game.players[player].player_id] = game.players[player].info()
+
+        return render_template("round_end.html",
+                               game=game,
+                               player=player,
+                               gameid=data["game_id"],
+                               playerid=data["player_id"],
+                               players_data=json.dumps(players_data, indent=4))
 
     def leaderboard(self, data):
         if "game_id" not in data:

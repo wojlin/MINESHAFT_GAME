@@ -19,4 +19,15 @@ function decreaseCount()
 
 const interval = setInterval(function() {
    decreaseCount();
- }, 1000);
+ }, 10000);
+
+
+function dispose_ranks()
+{
+    let data = JSON.parse(document.body.dataset.players_data);
+    console.log(data);
+
+
+}
+
+dispose_ranks();
