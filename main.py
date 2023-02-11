@@ -198,16 +198,31 @@ class GameHandler(object):
 
         elapsed_time = ' '.join(elapsed_time)
 
-        process = psutil.Process(os.getpid())
         total_memory = self.__convert_size(psutil.Process(os.getpid()).memory_info().rss)
-        print(start_date)
-        print(elapsed_time)
-        print(total_memory)
-        print(process.memory_full_info())
-        return {"start_time": start_date, "elapsed_time": elapsed_time}
+        rooms_memory = {}
+        for room in self.rooms:
+            rooms_memory[self.rooms[room].room_name] = self.__convert_size(self.__get_size(self.rooms[room]))
+        games_memory = {}
+        for game in self.games:
+            games_memory[self.games[game].name] = self.__convert_size(self.__get_size(self.games[game]))
+
+        all_rooms_memory = self.__convert_size(self.__get_size(self.rooms))
+        all_games_memory = self.__convert_size(self.__get_size(self.games))
+
+        rooms_amount = len(self.rooms)
+        games_amount = len(self.games)
+
+        return {"start_time": start_date,
+                "elapsed_time": elapsed_time,
+                "total_memory": total_memory,
+                "rooms_memory": rooms_memory,
+                "games_memory": games_memory,
+                "all_rooms_memory": all_rooms_memory,
+                "all_games_memory": all_games_memory,
+                "rooms_amount": rooms_amount,
+                "games_amount": games_amount}
 
     def stats(self, *args, **kwargs):
-
         stats = self.fetch_stats()
         return render_template("stats.html", stats=stats, game_name=self.game_name)
 

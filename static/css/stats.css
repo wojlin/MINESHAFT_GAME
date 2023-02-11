@@ -1,0 +1,117 @@
+#content
+{
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    margin:auto;
+    width:fit-content;
+    height:fit-content;
+    transform: translate(0, -50%);
+    background: var( --background-panel);
+    border: solid 0.5vh var(--border-color);
+    overflow: hidden;
+    border-radius:2vh;
+    padding:3vh;
+    padding-left:6vh;
+    padding-right:6vh;
+}
+
+h1
+{
+    text-align:center;
+    font-size:4vh;
+    margin-bottom:2vh;
+}
+
+#tables
+{
+    margin:auto;
+    display:block;
+}
+
+tr
+{
+    border-bottom: solid 0.2vh rgba(255,255,255,0.1);
+    font-size:1.5vh;
+    margin:1vh;
+    position:relative;
+    text-align: left;
+}
+
+.inline-table
+{
+    display: inline-block;
+    width:30vh;
+    height:30vh;
+    margin:1vh;
+
+    position:relative;
+    margin-top:1vh;
+}
+
+.table
+{
+    background: rgba(255,2555,255,0.1);
+    border-radius:1vh;
+    height:20vh;
+    width:30vh;
+    margin-top:1vh;
+}
+
+.inline-table > p:first-child
+{
+    font-size:3vh;
+}
+
+.inline-table > p
+{
+    text-align:center;
+    margin:auto;
+    font-size:1.5vh;
+}
+
+.inline
+{
+    height:2vh;
+}
+.inline > p:first-child{float:left;display:inline;}
+.inline > p:nth-child(2){float:right;display:inline;}
+
+table
+{
+    display: table;
+    width:28vh;
+    max-height:20vh;
+    overflow-y: auto;
+    table-layout:auto;
+    padding-left:1vh;
+    border-collapse: collapse;
+    margin-left:1vh;
+
+}
+
+
+a {
+	width: 20vh;
+	background: rgba(0,0,0,0.2);
+	border: solid 0.2vh rgba(255,255,255,0.5);
+	border-radius: 0.5vh;
+	line-height: 1.5vh;
+	font-size: 2vh;
+	height: 3vh;
+	margin:auto;
+	margin-top:2vh;
+	display: block;
+	text-align:center;
+	line-height:2.5vh;
+	text-decoration: none;
+	color: inherit;
+}
+
+a:hover {
+	transform: scale(1.05);
+	transition: all 0.2s;
+	cursor: pointer;
+	opacity: 0.5;
+}
