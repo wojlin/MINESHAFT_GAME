@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SERVER STATS | {{game_name}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inheritance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+</head>
+<body>
+<div id="content">
+    <h1>LEADERBOARD</h1>
+    <table id="leaderboard-list">
+        <thead>
+        <tr>
+            <th id="no-th">No.</th>
+            <th>Player Name</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for player in game.players %}
+        <tr class="leaderboard-list-element">
+            <td>
+                {% if game.players[player].leaderboard_pos == 1 %}
+                <img class="crown" src="/static/images/gold_crown.png" alt=""/>
+                {% elif game.players[player].leaderboard_pos == 2 %}
+                <img class="crown" src="/static/images/silver_crown.png" alt=""/>
+                {% elif game.players[player].leaderboard_pos == 3 %}
+                <img class="crown" src="/static/images/brown_crown.png" alt=""/>
+                {%endif%}
+            <p>{{game.players[player].leaderboard_pos}}.</p>
+            </td>
+            <td><p>{{game.players[player].player_name}}</p></td>
+            <td><p>{{game.players[player].rank}}</p></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="/">go back to lobby</a>
+</div>
+<script src="{{url_for('static', filename='js/leaderboard_sort.js')}}"></script>
+</body>
+</html>

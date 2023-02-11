@@ -1,3 +1,5 @@
+import time
+
 from Player import Player
 
 
@@ -22,12 +24,14 @@ class GameRoom:
         self.players = {game_host_player_id: Player(game_host_player_name, game_host_player_id, self.config)}
         self.game_started = False
         self.status = "waiting for more players"
+        self.last_activity = time.time()
 
     def add_player_to_room(self, player_id: str, player_name: str):
         self.players[player_id] = Player(player_name, player_id, self.config)
         self.players_amount += 1
         if self.players_amount >= 3:
             self.status = "waiting on host to start game"
+        self.last_activity = time.time()
 
     def fetch_status(self):
         players = {player.player_id: player.player_name for index, player in self.players.items()}
@@ -41,6 +45,9 @@ class GameRoom:
                   "room_comment": self.room_comment,
                   "status": self.status}
         return status
+
+    def deallocate_memory(self):
+        del self
 
     def info(self):
         info_str = f"room: {self.room_name}  "

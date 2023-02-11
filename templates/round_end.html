@@ -16,7 +16,7 @@
             <p>{{game.players[player].player_name}}</p>
             <p class="role" style="color: {{'green' if game.GOOD_PLAYER == game.players[player].player_role else 'red'}}">{{game.players[player].player_role}}</p>
             <img class="rank_img" id="{{game.players[player].player_id}}_rank" src="/static/images/rank_{{game.players[player].last_player_rank}}.svg" alt=""/>
-            <p class="rank">rank: <span id="{{game.players[player].player_id}}_text">{{game.players[player].last_player_rank}}</span></p>
+            <p class="rank">rank: <span id="{{game.players[player].player_id}}_text" style="color:orange;font-style:bold;">{{game.players[player].last_player_rank}}</span></p>
         </div>
         {% endfor %}
     </div>

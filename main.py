@@ -1,10 +1,13 @@
 from flask import Flask, Response, render_template, request, send_from_directory
+from datetime import datetime
 from typing import Dict
 import threading
+import logging
+import psutil
+import math
 import uuid
 import json
 import copy
-import logging
 import time
 import sys
 import os
@@ -32,6 +35,9 @@ class GameHandler(object):
     app = None
 
     def __init__(self, name):
+        self.start_time = datetime.now()
+        self.max_inactivity_time = 60 * 5
+        self.deallocate_time = 60 * 2
         self.game_name = "TUNNEL GAME"
         self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
@@ -71,7 +77,40 @@ class GameHandler(object):
             for room in self.rooms:
                 print(self.rooms[room].info())
 
+        print()
+        print(f"server stats:  http://{self.config['host']}:{self.config['port']}/stats")
 
+        threading.Timer(self.deallocate_time, self.__deallocate_unused_memory).start()
+
+    def __deallocate_unused_memory(self):
+        print("---------------------------")
+        print("deallocating unused memory....")
+        rooms_released = 0
+        games_released = 0
+        total_memory_before = self.__get_size(self.rooms) + self.__get_size(self.games)
+
+        delete = [key for key in self.rooms if type(self.rooms[key]) is None or time.time() - self.rooms[key].last_activity > self.max_inactivity_time]
+        for key in delete:
+            del self.rooms[key]
+            rooms_released += 1
+
+        delete = [key for key in self.games if type(self.games[key]) is None or time.time() - self.games[key].last_activity > self.max_inactivity_time]
+        for key in delete:
+            del self.games[key]
+            games_released += 1
+
+        total_memory_after = self.__get_size(self.rooms) + self.__get_size(self.games)
+
+        print(f"* closed {rooms_released} rooms")
+        print(f"* closed {games_released} games")
+
+        if total_memory_before - total_memory_after > 0:
+            print(f"{self.__convert_size(total_memory_before - total_memory_after)} released")
+        else:
+            print(f"zero bytes released")
+
+        print("---------------------------")
+        threading.Timer(self.deallocate_time, self.__deallocate_unused_memory).start()
 
     def __crate_game(self, name: str, players: Dict[str, GameEngine.Player], config: dict):
         game_id = str(uuid.uuid4())
@@ -92,6 +131,8 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/game/is_move_correct', endpoint_name='is move correct', handler=self.is_move_correct)
         self.add_endpoint(endpoint='/game/round_end', endpoint_name='round end', handler=self.round_end)
         self.add_endpoint(endpoint='/game/leaderboard', endpoint_name='leaderboard', handler=self.leaderboard)
+        self.add_endpoint(endpoint='/stats', endpoint_name='stats', handler=self.stats)
+        self.add_endpoint(endpoint='/stats/fetch_stats', endpoint_name='fetch server stats', handler=self.fetch_stats)
 
     def run_api(self):
         self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
@@ -105,6 +146,70 @@ class GameHandler(object):
     def favicon(self, *args, **kwargs):
         return send_from_directory(os.path.join(self.app.root_path, 'static'),
                                    'images/favicon.png', mimetype='image/vnd.microsoft.icon')
+
+    def __get_size(self, obj, seen=None):
+        """Recursively finds size of objects"""
+        size = sys.getsizeof(obj)
+        if seen is None:
+            seen = set()
+        obj_id = id(obj)
+        if obj_id in seen:
+            return 0
+        # Important mark as seen *before* entering recursion to gracefully handle
+        # self-referential objects
+        seen.add(obj_id)
+        if isinstance(obj, dict):
+            size += sum([self.__get_size(v, seen) for v in obj.values()])
+            size += sum([self.__get_size(k, seen) for k in obj.keys()])
+        elif hasattr(obj, '__dict__'):
+            size += self.__get_size(obj.__dict__, seen)
+        elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
+            size += sum([self.__get_size(i, seen) for i in obj])
+        return size
+
+    def __convert_size(self, size_bytes):
+        if size_bytes == 0:
+            return "0B"
+        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        p = math.pow(1024, i)
+        s = round(size_bytes / p, 2)
+        return "%s %s" % (s, size_name[i])
+
+    def fetch_stats(self, *args, **kwargs):
+        start_date = self.start_time.strftime("%Y-%m-%d %H:%M:%S")
+        sec = (datetime.now() - self.start_time).total_seconds()
+
+        elapsed_time = []
+        days, sec = divmod(sec, 86400)  # sec will get seconds in partial day
+        if days:
+            elapsed_time.append(f"{int(days)} day" + "s" * (days > 1))
+
+        hours, sec = divmod(sec, 3600)  # sec will get seconds in partial hour
+        if hours:
+            elapsed_time.append(f"{int(hours)} hour" + "s" * (hours > 1))
+
+        minutes, sec = divmod(sec, 60)  # sec will get seconds in partial minute
+        if minutes:
+            elapsed_time.append(f"{int(minutes)} minute" + "s" * (minutes > 1))
+
+        if sec:
+            elapsed_time.append(f"{int(sec)} second" + "s" * (sec > 1))
+
+        elapsed_time = ' '.join(elapsed_time)
+
+        process = psutil.Process(os.getpid())
+        total_memory = self.__convert_size(psutil.Process(os.getpid()).memory_info().rss)
+        print(start_date)
+        print(elapsed_time)
+        print(total_memory)
+        print(process.memory_full_info())
+        return {"start_time": start_date, "elapsed_time": elapsed_time}
+
+    def stats(self, *args, **kwargs):
+
+        stats = self.fetch_stats()
+        return render_template("stats.html", stats=stats, game_name=self.game_name)
 
     def room(self, data):
         if "player_id" not in data:
@@ -234,6 +339,8 @@ class GameHandler(object):
                                               players=copy.deepcopy(room.players))
 
         status = room.fetch_status()
+
+        threading.Timer(10, room.deallocate_memory)
 
         return {"message_type": "status", "data": status}
 

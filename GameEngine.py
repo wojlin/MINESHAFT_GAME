@@ -1,3 +1,4 @@
+import time
 from typing import Dict
 import threading
 import random
@@ -163,6 +164,7 @@ class GameEngine(object):
 
 class Game(GameEngine):
     def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict):
+        self.last_activity = time.time()
         creation_rules = self.check_game_creation_rules(players)
         if creation_rules[const.MESSAGE_TYPE] == const.ERROR_MESSAGE:
             raise const.InvalidMountOfPlayersException
@@ -255,12 +257,19 @@ class Game(GameEngine):
         if self.round_ended:
             winning_team = self.BAD_PLAYER if len(self.cards) == 0 else self.GOOD_PLAYER
             self.dispose_ranks(player_id, winning_team)
-            threading.Timer(10, self.prepare_next_round).start()
+            if self.round < 3:
+                threading.Timer(10, self.prepare_next_round).start()
+            else:
+                threading.Timer(10, self.deallocate_memory).start()
 
         self.update_leaderboard()
         self.current_turn_num = self.current_turn_num + 1 if self.current_turn_num < len(self.players) -1 else 0
         self.turn = list(self.players.values())[self.current_turn_num].player_id
+        self.last_activity = time.time()
         return f"turn ended, now its '{self.players[self.turn].player_name}' turn"
+
+    def deallocate_memory(self):
+        del self
 
     def prepare_next_round(self):
         self.round_ended = False
