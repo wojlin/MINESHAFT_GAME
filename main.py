@@ -38,6 +38,8 @@ class GameHandler(object):
         self.start_time = datetime.now()
         self.max_inactivity_time = 60 * 5
         self.deallocate_time = 60 * 2
+        self.memory_plot_delay = 1#60 * 1
+        self.max_memory_entries = 100
         self.game_name = "TUNNEL GAME"
         self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
@@ -46,6 +48,8 @@ class GameHandler(object):
         time.sleep(0.5)
         self.games: Dict[str, GameEngine.Game] = {}
         self.rooms: Dict[str, GameRoom] = {}
+
+        self.memory_plot = []
 
         if self.config["development_stage"]:
             players: Dict[str, GameEngine.Player] = {}
@@ -81,6 +85,16 @@ class GameHandler(object):
         print(f"server stats:  http://{self.config['host']}:{self.config['port']}/stats")
 
         threading.Timer(self.deallocate_time, self.__deallocate_unused_memory).start()
+        threading.Thread(target=self.memory_plot_thread, args=()).start()
+
+    def memory_plot_thread(self):
+        while True:
+            date = self.start_time.strftime("%Y-%m-%d %H:%M:%S")
+            memory = self.__convert_size(psutil.Process(os.getpid()).memory_info().rss)
+            self.memory_plot.append([date, memory])
+            if len(self.memory_plot) > self.max_memory_entries:
+                self.memory_plot.pop(0)
+            time.sleep(self.memory_plot_delay)
 
     def __deallocate_unused_memory(self):
         print("---------------------------")
@@ -212,6 +226,9 @@ class GameHandler(object):
         rooms_amount = len(self.rooms)
         games_amount = len(self.games)
 
+        plot_x = [i[0] for i in self.memory_plot]
+        plot_y = [i[1] for i in self.memory_plot]
+
         return {"start_time": start_date,
                 "elapsed_time": elapsed_time,
                 "total_memory": total_memory,
@@ -220,7 +237,9 @@ class GameHandler(object):
                 "all_rooms_memory": all_rooms_memory,
                 "all_games_memory": all_games_memory,
                 "rooms_amount": rooms_amount,
-                "games_amount": games_amount}
+                "games_amount": games_amount,
+                "plot_x": plot_x,
+                "plot_y": plot_y}
 
     def stats(self, *args, **kwargs):
         stats = self.fetch_stats()

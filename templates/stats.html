@@ -10,17 +10,17 @@
 <div id="content">
     <h1>SERVER STATS</h1>
     <div class="inline">
-        <p>server start time: <span>{{stats["start_time"]}}</span></p>
-        <p>elapsed time: <span>{{stats["elapsed_time"]}}</span></p>
+        <p>server start time: <span id="start_time">{{stats["start_time"]}}</span></p>
+        <p>elapsed time: <span id="elapsed_time">{{stats["elapsed_time"]}}</span></p>
     </div>
-    <p style="margin:1vh;font-size:2vh;text-align:center;">total memory: <span>{{stats["total_memory"]}}</span></p>
+    <p style="margin:1vh;font-size:2vh;text-align:center;">total memory: <span id="total_memory">{{stats["total_memory"]}}</span></p>
     <div id="tables">
         <div class="inline-table">
             <p>rooms</p>
             <p>amount:<span id="rooms_amount">{{stats["rooms_amount"]}}</span></p>
             <p>total memory:<span id="rooms_memory">{{stats["all_rooms_memory"]}}</span></p>
             <div class="table">
-                <table>
+                <table id="rooms_table">
                     <thead>
                     <tr>
                         <th>No</th>
@@ -49,7 +49,7 @@
             <p>amount:<span id="games_amount">{{stats["games_amount"]}}</span></p>
             <p>total memory:<span id="games_memory">{{stats["all_games_memory"]}}</span></p>
             <div class="table">
-                <table>
+                <table id="games_table">
                     <thead>
                     <tr>
                         <th>No</th>
@@ -72,11 +72,14 @@
                 </table>
             </div>
         </div>
+        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
     </div>
 
 
     <a href="/">go back to lobby</a>
 </div>
-<script src="{{url_for('static', filename='js/leaderboard_sort.js')}}"></script>
+<script src="{{url_for('static', filename='js/stats.js')}}"></script>
+<script src="{{url_for('static', filename='js/memory_chart.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </body>
 </html>

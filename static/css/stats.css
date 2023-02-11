@@ -115,3 +115,11 @@ a:hover {
 	cursor: pointer;
 	opacity: 0.5;
 }
+
+#myChart
+{
+    display:block;
+    width:70%;
+    margin:auto;
+    margin-top:1vh;
+}
