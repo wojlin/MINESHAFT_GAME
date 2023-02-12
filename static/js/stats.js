@@ -22,6 +22,7 @@ function fetch_stats_handler(stats)
     document.getElementById("rooms_memory").innerHTML = stats["all_rooms_memory"];
     document.getElementById("games_amount").innerHTML = stats["games_amount"];
     document.getElementById("games_memory").innerHTML = stats["all_games_memory"];
+    document.getElementById("rpm").innerHTML = stats["rpm"];
 
     let rooms_table = document.getElementById("rooms_table").querySelector("tbody");
     let count = 1;
@@ -53,44 +54,85 @@ function fetch_stats_handler(stats)
 
     let xValues = stats["plot_x"];
     let yValues = stats["plot_y"];
+    let y1Values = stats["plot_rpm"];
 
     new Chart("myChart", {
       type: "line",
-
-      data: {
+      data:
+      {
         labels: xValues,
-        datasets: [{
-          backgroundColor: "rgba(255,0,0,0.1)",
-          borderColor: "rgba(255,0,0,1)",
-          data: yValues
-        }]
+        datasets:
+        [
+            {
+                label: 'RAM usage',
+                data: yValues,
+                borderColor: "rgba(255,0,0,1)",
+                backgroundColor: "rgba(255,0,0,0.1)",
+                yAxisID: 'y'
+            },
+            {
+                label: 'requests per minute',
+                data: y1Values,
+                borderColor: "rgba(255,255,0,1)",
+                backgroundColor: "rgba(255,0,0,0.0)",
+                yAxisID: 'y1'
+            }
+        ]
       },
       options:
       {
-        scales: {
-        yAxes: [{
-            ticks: {
-                userCallback: function(item) {
-                    return item + " MB";
-                },
+        animation: false,
+        tooltips:
+        {
+            enabled: false
+        },
+        legend:
+        {
+            display: false
+        },
+        elements:
+        {
+            point:
+            {
+                radius: 0
             }
-        }]
-    },
-            animation: false,
-        tooltips: {
-         enabled: false
-    },elements: {
-                    point:{
-                        radius: 0
+        },
+        scales:
+        {
+            yAxes:
+            [
+                {
+                    id: 'y',
+                    position: 'left',
+                    type: 'linear',
+                    ticks:
+                    {
+                        userCallback: function(item)
+                        {
+                            return item + " MB";
+                        },
                     }
                 },
-                legend: {
-         display: false //This will do the task
-      },
-      },
-
+                {
+                    id: 'y1',
+                    position: 'right',
+                    type: 'linear',
+                    ticks:
+                    {
+                        userCallback: function(item)
+                        {
+                            return item + " RPM";
+                        },
+                    },
+                    gridLines:
+                    {
+                        color: "rgba(0, 0, 0, 0)",
+                    }
+                }
+            ]
+        }
+      }
     });
-
 }
 
 

@@ -73,7 +73,7 @@ tr
 
 .inline
 {
-    height:2vh;
+    height:4vh;
 }
 .inline > p:first-child{float:left;display:inline;}
 .inline > p:nth-child(2){float:right;display:inline;}

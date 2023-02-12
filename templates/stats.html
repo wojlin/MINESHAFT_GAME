@@ -11,9 +11,12 @@
     <h1>SERVER STATS</h1>
     <div class="inline">
         <p>server start time: <span id="start_time">{{stats["start_time"]}}</span></p>
-        <p>elapsed time: <span id="elapsed_time">{{stats["elapsed_time"]}}</span></p>
+        <p>total memory usage: <span id="total_memory">{{stats["total_memory"]}}</span></p>
     </div>
-    <p style="margin:1vh;font-size:2vh;text-align:center;">total memory: <span id="total_memory">{{stats["total_memory"]}}</span></p>
+    <div class="inline">
+        <p>elapsed time: <span id="elapsed_time">{{stats["elapsed_time"]}}</span></p>
+        <p>requests per minute: <span id="rpm">{{stats["rpm"]}}</span></p>
+    </div>
     <div id="tables">
         <div class="inline-table">
             <p>rooms</p>

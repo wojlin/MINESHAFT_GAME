@@ -22,12 +22,14 @@ log.setLevel(logging.ERROR)
 
 class EndpointAction(object):
 
-    def __init__(self, action):
+    def __init__(self, action, obj):
         self.action = action
         self.response = Response(status=200, headers={})
+        self.obj = obj
 
     def __call__(self, *args, **kwargs):
         data = dict(request.args)
+        self.obj.rpm_count += 1
         return self.action(data)
 
 
@@ -41,6 +43,9 @@ class GameHandler(object):
         self.memory_plot_delay = 60 * 1
         self.max_memory_entries = 60
         self.game_name = "TUNNEL GAME"
+
+        self.rpm_count = 0
+
         self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
         self.add_endpoints()
@@ -89,9 +94,10 @@ class GameHandler(object):
 
     def memory_plot_thread(self):
         while True:
-            date = self.start_time.strftime("%H:%M")
+            date = datetime.now().strftime("%H:%M")
             memory = psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024
-            self.memory_plot.append([date, memory])
+            self.memory_plot.append([date, memory, self.rpm_count])
+            self.rpm_count = 0
             if len(self.memory_plot) > self.max_memory_entries:
                 self.memory_plot.pop(0)
             time.sleep(self.memory_plot_delay)
@@ -152,7 +158,7 @@ class GameHandler(object):
         self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
-        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler))
+        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler, self))
 
     def index(self, *args, **kwargs):
         return render_template('index.html', rooms=self.rooms)
@@ -214,11 +220,13 @@ class GameHandler(object):
 
         total_memory = self.__convert_size(psutil.Process(os.getpid()).memory_info().rss)
         rooms_memory = {}
-        for room in self.rooms:
-            rooms_memory[self.rooms[room].room_name] = self.__convert_size(self.__get_size(self.rooms[room]))
+        if len(self.rooms):
+            for room in self.rooms:
+                rooms_memory[self.rooms[room].room_name] = self.__convert_size(self.__get_size(self.rooms[room]))
         games_memory = {}
-        for game in self.games:
-            games_memory[self.games[game].name] = self.__convert_size(self.__get_size(self.games[game]))
+        if len(self.games):
+            for game in self.games:
+                games_memory[self.games[game].name] = self.__convert_size(self.__get_size(self.games[game]))
 
         all_rooms_memory = self.__convert_size(self.__get_size(self.rooms))
         all_games_memory = self.__convert_size(self.__get_size(self.games))
@@ -228,6 +236,7 @@ class GameHandler(object):
 
         plot_x = [i[0] for i in self.memory_plot]
         plot_y = [i[1] for i in self.memory_plot]
+        plot_rpm = [i[2] for i in self.memory_plot]
 
         return {"start_time": start_date,
                 "elapsed_time": elapsed_time,
@@ -239,7 +248,9 @@ class GameHandler(object):
                 "rooms_amount": rooms_amount,
                 "games_amount": games_amount,
                 "plot_x": plot_x,
-                "plot_y": plot_y}
+                "plot_y": plot_y,
+                "rpm": self.rpm_count,
+                "plot_rpm": plot_rpm}
 
     def stats(self, *args, **kwargs):
         stats = self.fetch_stats()
