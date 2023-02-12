@@ -1,0 +1,44 @@
+#content
+{
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    margin:auto;
+    width:60vh;
+    height:fit-content;
+    transform: translate(0, -50%);
+    background: var( --background-panel);
+    border: solid 0.5vh var(--border-color);
+    overflow: hidden;
+    border-radius:2vh;
+    padding:3vh;
+    padding-left:6vh;
+    padding-right:6vh;
+    text-align:center;
+}
+
+h1
+{
+    margin:2vh;
+}
+
+h2
+{
+    margin:1vh;
+}
+
+p
+{
+    text-align: justify;
+  text-justify: inter-word;
+  text-align-last:center;
+  opacity:0.8;
+}
+
+ul
+{
+    display:inline-block;
+    margin:2vh;
+    text-align:left;
+}

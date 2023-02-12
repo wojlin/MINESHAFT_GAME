@@ -45,16 +45,15 @@ class GameHandler(object):
         self.game_name = "TUNNEL GAME"
 
         self.rpm_count = 0
+        self.memory_plot = []
+        self.games: Dict[str, GameEngine.Game] = {}
+        self.rooms: Dict[str, GameRoom] = {}
 
         self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
         self.add_endpoints()
         threading.Thread(target=self.run_api, args=()).start()
         time.sleep(0.5)
-        self.games: Dict[str, GameEngine.Game] = {}
-        self.rooms: Dict[str, GameRoom] = {}
-
-        self.memory_plot = []
 
         if self.config["development_stage"]:
             players: Dict[str, GameEngine.Player] = {}
@@ -153,12 +152,16 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/game/leaderboard', endpoint_name='leaderboard', handler=self.leaderboard)
         self.add_endpoint(endpoint='/stats', endpoint_name='stats', handler=self.stats)
         self.add_endpoint(endpoint='/stats/fetch_stats', endpoint_name='fetch server stats', handler=self.fetch_stats)
+        self.add_endpoint(endpoint='/rules', endpoint_name='rules', handler=self.rules)
 
     def run_api(self):
         self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler, self))
+
+    def rules(self, *args, **kwargs):
+        return render_template('rules.html', game_name=self.game_name)
 
     def index(self, *args, **kwargs):
         return render_template('index.html', rooms=self.rooms)
@@ -340,9 +343,10 @@ class GameHandler(object):
 
     def fetch_rooms_status(self, data):
         rooms_status = {}
-        for roomid in self.rooms:
-            room = self.rooms[roomid]
-            rooms_status[room.room_id] = room.fetch_status()
+        if len(self.rooms):
+            for roomid in self.rooms:
+                room = self.rooms[roomid]
+                rooms_status[room.room_id] = room.fetch_status()
 
         return {"message_type": "status", "data": rooms_status}
 

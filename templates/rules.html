@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RULES | {{game_name}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inheritance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rules.css') }}">
+</head>
+<body>
+<div id="content">
+    <h1>{{game_name}}</h1>
+    <p>Players: 3-10 Ages: 8 and up Playing time: about 30 minutes</p>
+    <h2>Game Pieces:</h2>
+    <p>44 Tunnel Cards 27 Action Cards</p>
+    <h2>The Goal of the Game</h2>
+    <p>
+        Are you a soldier... or a saboteur?
+        The players are soldiers working their trenches ever-deeper into the enemy terretory in
+        search of fame, or saboteurs trying to put obstacles in the soldiers’ path. The members of each group
+        should work together, but often they can only guess who their allies are! If the soldiers can make a
+        path to the objective, they are rewarded with ranks while the saboteurs leave empty-handed.
+        If the soldiers fail, it is the saboteurs who reap the reward! But, the identity of each soldier is not
+        revealed until the ranks is split up. After three rounds, the soldier with the highest rank wins!
+    </p>
+    <h2>Preparation</h2>
+    <p>The number of soldier and saboteur cards used depends on the number of players:</p>
+    <ul>
+        <li>3 players: 1 saboteur and 3 soldiers</li>
+        <li>4 players: 1 saboteur and 4 soldiers</li>
+        <li>5 players: 2 saboteurs and 4 soldiers</li>
+        <li>6 players: 2 saboteurs and 5 soldiers</li>
+    </ul>
+    <ul>
+        <li>7 players: 3 saboteurs and 5 soldiers</li>
+        <li>8 players: 3 saboteurs and 6 soldiers</li>
+        <li>9 players: 3 saboteurs and 7 soldiers</li>
+        <li>10 players: all soldiers cards</li>
+    </ul>
+    <p>role cards will be dealed to each player randomly</p>
+    <p>The number of cards on hand used depends on the number of players:</p>
+    <ul>
+        <li>3 to 5 players: Each player is dealt 6 cards</li>
+        <li>6 to 10 players: Each player is dealt 4 cards.
+    </ul>
+    <p>rest of cards will be putted on stack</p>
+    <h2>How to play</h2>
+    <p>On his turn, a player must first play 1 card.</p>
+    <p>This means either:</p>
+    <ul>
+    - Add 1 path card to the maze; or
+    - Place 1 action card in front of any player; or
+    - Pass, by putting 1 card face down on the discard pile.
+    </ul>
+        Then, the player must draw the top card off the path deck and add it to his hand. This ends his turn, and
+        play passes to the next player.
+        Note: When the draw deck is used up, the players do not draw cards anymore—a turn then consists only
+        of playing a card.
+    </p>
+</div>
+
+</body>
+</html>
