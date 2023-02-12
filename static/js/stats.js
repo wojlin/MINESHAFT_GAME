@@ -51,7 +51,48 @@ function fetch_stats_handler(stats)
         count++;
     }
 
+    let xValues = stats["plot_x"];
+    let yValues = stats["plot_y"];
+
+    new Chart("myChart", {
+      type: "line",
+
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: "rgba(255,0,0,0.1)",
+          borderColor: "rgba(255,0,0,1)",
+          data: yValues
+        }]
+      },
+      options:
+      {
+        scales: {
+        yAxes: [{
+            ticks: {
+                userCallback: function(item) {
+                    return item + " MB";
+                },
+            }
+        }]
+    },
+            animation: false,
+        tooltips: {
+         enabled: false
+    },elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+                legend: {
+         display: false //This will do the task
+      },
+      },
+
+    });
+
 }
+
 
 function fetch_stats()
 {

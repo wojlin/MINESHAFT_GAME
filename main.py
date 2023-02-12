@@ -37,9 +37,9 @@ class GameHandler(object):
     def __init__(self, name):
         self.start_time = datetime.now()
         self.max_inactivity_time = 60 * 5
-        self.deallocate_time = 60 * 2
-        self.memory_plot_delay = 1#60 * 1
-        self.max_memory_entries = 100
+        self.deallocate_time = 60 * 10
+        self.memory_plot_delay = 60 * 1
+        self.max_memory_entries = 60
         self.game_name = "TUNNEL GAME"
         self.config = json.loads(open('settings.json').read())
         self.app = Flask(name)
@@ -89,8 +89,8 @@ class GameHandler(object):
 
     def memory_plot_thread(self):
         while True:
-            date = self.start_time.strftime("%Y-%m-%d %H:%M:%S")
-            memory = self.__convert_size(psutil.Process(os.getpid()).memory_info().rss)
+            date = self.start_time.strftime("%H:%M")
+            memory = psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024
             self.memory_plot.append([date, memory])
             if len(self.memory_plot) > self.max_memory_entries:
                 self.memory_plot.pop(0)
@@ -646,4 +646,3 @@ class GameHandler(object):
 
 if __name__ == "__main__":
     app = GameHandler('game')
-
