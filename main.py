@@ -44,6 +44,7 @@ class GameHandler(object):
         self.max_memory_entries = 60
         self.game_name = "TUNNEL GAME"
 
+        self.rpm = 0
         self.rpm_count = 0
         self.memory_plot = []
         self.games: Dict[str, GameEngine.Game] = {}
@@ -95,7 +96,8 @@ class GameHandler(object):
         while True:
             date = datetime.now().strftime("%H:%M")
             memory = psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024
-            self.memory_plot.append([date, memory, self.rpm_count])
+            self.rpm = self.rpm_count
+            self.memory_plot.append([date, memory, self.rpm])
             self.rpm_count = 0
             if len(self.memory_plot) > self.max_memory_entries:
                 self.memory_plot.pop(0)
@@ -252,7 +254,7 @@ class GameHandler(object):
                 "games_amount": games_amount,
                 "plot_x": plot_x,
                 "plot_y": plot_y,
-                "rpm": self.rpm_count,
+                "rpm": self.rpm,
                 "plot_rpm": plot_rpm}
 
     def stats(self, *args, **kwargs):

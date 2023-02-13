@@ -1,3 +1,5 @@
+
+
 #content
 {
     position: absolute;
@@ -6,16 +8,17 @@
     right:0;
     margin:auto;
     width:60vh;
-    height:fit-content;
+    height:60vh;
+    overflow-y:auto;
     transform: translate(0, -50%);
     background: var( --background-panel);
     border: solid 0.5vh var(--border-color);
-    overflow: hidden;
     border-radius:2vh;
     padding:3vh;
     padding-left:6vh;
     padding-right:6vh;
     text-align:center;
+    scrollbar-width: 2vh;
 }
 
 h1
@@ -41,4 +44,28 @@ ul
     display:inline-block;
     margin:2vh;
     text-align:left;
+}
+
+a {
+	width: 20vh;
+	background: rgba(0,0,0,0.2);
+	border: solid 0.2vh rgba(255,255,255,0.5);
+	border-radius: 0.5vh;
+	line-height: 1.5vh;
+	font-size: 2vh;
+	height: 3vh;
+	margin:auto;
+	margin-top:2vh;
+	display: block;
+	text-align:center;
+	line-height:2.5vh;
+	text-decoration: none;
+	color: inherit;
+}
+
+a:hover {
+	transform: scale(1.05);
+	transition: all 0.2s;
+	cursor: pointer;
+	opacity: 0.5;
 }

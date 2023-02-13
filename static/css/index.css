@@ -265,3 +265,62 @@ width:2vh !important;
     transform:scale(1.2);
     opacity:0.7;
 }
+
+.round
+{
+    position:absolute;
+    width:30vh;
+    height:30vh;
+    font-size:3vh;
+    line-height:5vh;
+    border-radius:100%;
+    background:rgb(0,0,0);
+    opacity:0.5;
+    text-decoration: none;
+    border: solid 0.5vh rgba(255,255,255,1);
+    transition: all 0.3s;
+}
+
+#rules:hover
+{
+    transform: translate(50%,-50%) scale(1.2) !important;
+    border: solid 0.5vh rgba(255,255,255,0.5);
+    opacity:0.7;
+}
+
+#stats:hover
+{
+    transform: translate(-50%,-50%) scale(1.2) !important;
+    border: solid 0.5vh rgba(255,255,255,0.5);
+    opacity:0.7;
+}
+
+#rules > p {
+	position: absolute;
+	right: 17vh;
+	top: 17vh;
+	width: 10vh;
+	text-align: right;
+}
+
+#stats > p {
+	position: absolute;
+	left: 17vh;
+	top: 17vh;
+	width: 10vh;
+	text-align: left;
+}
+
+#rules
+{
+    right:0;
+    top:0;
+    transform: translate(50%,-50%);
+}
+
+#stats
+{
+    left:0;
+    top:0;
+    transform: translate(-50%,-50%);
+}
