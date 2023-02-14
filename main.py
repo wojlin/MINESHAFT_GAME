@@ -1,9 +1,10 @@
-from flask import Flask, Response, render_template, request, send_from_directory
+from flask import Flask, Response, render_template, request, send_from_directory, send_file
 from datetime import datetime
 from typing import Dict
 import threading
 import logging
 import psutil
+import base64
 import math
 import uuid
 import json
@@ -11,6 +12,7 @@ import copy
 import time
 import sys
 import os
+import io
 
 import GameEngine
 from GameRoom import GameRoom
@@ -18,7 +20,8 @@ import Cards
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
-
+cli = sys.modules['flask.cli']
+cli.show_server_banner = lambda *x: None
 
 class EndpointAction(object):
 
@@ -44,6 +47,7 @@ class GameHandler(object):
         self.max_memory_entries = 60
         self.game_name = "TUNNEL GAME"
 
+        self.images = self.__load_images()
         self.rpm = 0
         self.rpm_count = 0
         self.memory_plot = []
@@ -155,12 +159,45 @@ class GameHandler(object):
         self.add_endpoint(endpoint='/stats', endpoint_name='stats', handler=self.stats)
         self.add_endpoint(endpoint='/stats/fetch_stats', endpoint_name='fetch server stats', handler=self.fetch_stats)
         self.add_endpoint(endpoint='/rules', endpoint_name='rules', handler=self.rules)
+        self.add_endpoint(endpoint='/load_image', endpoint_name='load image', handler=self.load_image)
 
     def run_api(self):
+        print("-------------------------------------")
+        print(f"server started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("-------------------------------------")
         self.app.run(host=self.config["host"], port=self.config["port"], debug=self.config["debug"])
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler, self))
+
+    def __load_images(self):
+        images = {}
+        path = str(os.path.join(os.path.dirname(__file__), 'static/images/'))
+        count = 0
+        for filename in os.listdir(path):
+            with open(path + filename, "rb") as image_file:
+                encoded_string = image_file.read()
+                images[filename] = encoded_string
+                count += 1
+        print("--------------------------------------------------------------")
+        print(f"loaded {count} images into RAM memory for faster requests handling!")
+        print("--------------------------------------------------------------")
+        return images
+
+    def load_image(self, data):
+        if "filename" not in data:
+            return {"message_type": "error", "message": "filename not in request data"}
+
+        if data["filename"] not in self.images:
+            return {"message_type": "error", "message": "filename not found in server files"}
+
+        response = self.images[data['filename']]
+        file_type = str(data['filename']).split('.')[-1]
+        return send_file(
+            io.BytesIO(response),
+            mimetype=f'image/{file_type}',
+            as_attachment=True,
+            download_name=f'{uuid.uuid4()}.{file_type}')
 
     def rules(self, *args, **kwargs):
         return render_template('rules.html', game_name=self.game_name)

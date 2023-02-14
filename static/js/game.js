@@ -49,7 +49,7 @@ function update_game_status(message)
             let player_id = players_actions[i].dataset.actionid;
             let action_num = players_actions[i].dataset.actionnum;
             let state = message['players_actions'][player_id][action_num];
-            let exp = 'static/images/';
+            let exp = '/load_image?filename=';
 
             if(state == true)
             {
@@ -82,7 +82,8 @@ function update_game_status(message)
             cell_id = cell.id;
             cell_x = parseInt(cell_id.split('_')[1]);
             cell_y = parseInt(cell_id.split('_')[2]);
-            cell.src = "static/images/" + message['board'][cell_y][cell_x];
+            cell.src =  message['board'][cell_y][cell_x];
+             cell.src =  cell.src;
         });
 
         if(turnEnd == true)
@@ -109,7 +110,7 @@ function update_game_status(message)
                   if(key.toString() == key1.toString())
                   {
                     console.log('updated card slot n', key, ' with: ', value1["card_url"])
-                    cardHolders[key.toString()].src = "static/images/" + value1["card_url"];
+                    cardHolders[key.toString()].src = "/load_image?filename=" + value1["card_url"];
                     cardHolders[key.toString()].dataset.info = JSON.stringify(value1);
                   }
                 }

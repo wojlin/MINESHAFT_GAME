@@ -29,9 +29,9 @@ class Player:
         self.rank_url = self.return_rank_url()
 
     def return_rank_url(self):
-        return f"/static/images/rank_{self.rank}.svg"
+        return f"/load_image?filename=rank_{self.rank}.png"
 
     def return_last_player_rank_url(self):
-        return f"/static/images/rank_{self.rank}.svg"
+        return f"/load_image?filename=rank_{self.rank}.png"
 
 

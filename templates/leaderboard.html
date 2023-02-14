@@ -22,11 +22,11 @@
         <tr class="leaderboard-list-element">
             <td>
                 {% if game.players[player].leaderboard_pos == 1 %}
-                <img class="crown" src="/static/images/gold_crown.png" alt=""/>
+                <img class="crown" src="/load_image?filename=gold_crown.png" alt=""/>
                 {% elif game.players[player].leaderboard_pos == 2 %}
-                <img class="crown" src="/static/images/silver_crown.png" alt=""/>
+                <img class="crown" src="/load_image?filename=silver_crown.png" alt=""/>
                 {% elif game.players[player].leaderboard_pos == 3 %}
-                <img class="crown" src="/static/images/brown_crown.png" alt=""/>
+                <img class="crown" src="/load_image?filename=brown_crown.png" alt=""/>
                 {%endif%}
             <p>{{game.players[player].leaderboard_pos}}.</p>
             </td>

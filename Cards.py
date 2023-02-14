@@ -37,10 +37,10 @@ class Card:
     def info(self):
         card_vis = ''
         if self.card_type == self.TUNNEL_TYPE:
-            card_vis = f"card visualization: [{self.possible_cards[self.picture_url[:-4]]}]"
+            card_vis = f"card visualization: [{self.possible_cards[self.picture_url.split('=')[-1][:-4]]}]"
         elif self.card_type == self.ACTION_TYPE:
-            action_type = self.picture_url.split('_')[0]
-            points = self.picture_url.split('_')[1][:-4]
+            action_type = self.picture_url.split('=')[-1].split('_')[0]
+            points = self.picture_url.split('=')[-1].split('_')[1][:-4]
             card_vis = f"action type: {action_type}  action effect: {points}"
         else:
             raise Exception("unknown card type")
@@ -107,12 +107,12 @@ class TunnelCard(Card):
         return grid
 
     def symbol(self):
-        return self.possible_cards[self.picture_url[:-4]]
+        return self.possible_cards[self.picture_url.split('=')[-1][:-4]]
 
     def __create_filename(self):
         if self.__card_name:
-            return self.__card_name + ".png"
-        filename = ""
+            return "/load_image?filename=" + self.__card_name + ".png"
+        filename = "/load_image?filename="
         filename += "top_" if self.way_top else "none_"
         filename += "right_" if self.way_right else "none_"
         filename += "bottom_" if self.way_bottom else "none_"
@@ -138,4 +138,4 @@ class ActionCard(Card):
         self.card_info_js = json.dumps(self.card_info)
 
     def __create_filename(self):
-        return f"{self.action_type}_{'positive' if self.is_positive_effect else 'negative'}.png"
+        return f"/load_image?filename={self.action_type}_{'positive' if self.is_positive_effect else 'negative'}.png"
