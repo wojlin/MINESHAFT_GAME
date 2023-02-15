@@ -23,7 +23,3 @@ python3 main.py
 python3 tests.py
 ```
 
-#### TODO:
-* disable join button if room is full
-* finish implementing gameplay
-
