@@ -516,8 +516,8 @@ class GameHandler(object):
             status = game.check_game_tunnel_card_rules(card, pos_x=pos_x, pos_y=pos_y)
             if status is False:
                 return {"message_type": "error", "message": f"move is not valid"}
-            game.board[pos_y][pos_x] = copy.deepcopy(card)
-            game.update_pathfinding_grid(pos_x, pos_y, card)
+            game.update_board(pos_x, pos_y, card)
+
             with open('path.txt', 'w') as file:
                 file.write(game.pathfinding_grid_info())
             self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)

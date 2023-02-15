@@ -1,9 +1,12 @@
-import time
+from pathfinding.core.diagonal_movement import DiagonalMovement
+from pathfinding.core.grid import Grid
+from pathfinding.finder.a_star import AStarFinder
 from typing import Dict
 import threading
 import random
 import math
 import copy
+import time
 
 import const
 import Cards
@@ -12,6 +15,7 @@ from Player import Player
 
 class GameEngine(object):
     def __init__(self, name: str, game_id: str, players: Dict[str, Player], config: dict, round: int):
+        self.STARTING_POINT = (0, 0)
         self.BOARD_SIZE_X = 12
         self.BOARD_SIZE_Y = 9
         self.name = name
@@ -50,6 +54,8 @@ class GameEngine(object):
         self.board = self.__create_game_board()
         self.grid = self.__create_pathfinding_grid()
 
+
+
     def __create_pathfinding_grid(self):
         grid = [[0 for x in range(len(self.board[0])*3)] for y in range(len(self.board)*3)]
         for y in range(len(self.board)):
@@ -71,6 +77,8 @@ class GameEngine(object):
                                        overwrite=False,
                                        empty=False,
                                        card_name="start")
+
+        self.STARTING_POINT = (2*3+1, 4*3+1)
 
         picked = random.choice([0, 1, 2])
 
@@ -359,7 +367,36 @@ class Game(GameEngine):
         if not card.way_left and left_side.way_right and not left_side.empty:
             return False
 
+        correct = self.check_pathfinding_rules(pos_x, pos_y, card)
+        if not correct:
+            return False
+
         return True
+
+    def update_board(self, pos_x, pos_y, card):
+        self.board[pos_y][pos_x] = copy.deepcopy(card)
+        self.update_pathfinding_grid(pos_x, pos_y, card)
+
+    def check_pathfinding_rules(self, pos_x, pos_y, card):
+        grid = copy.deepcopy(self.grid)
+        grid = self.__temp_update_pathfinding_grid(grid, pos_x, pos_y, card)
+
+        grid = Grid(matrix=grid)
+
+        start = grid.node(self.STARTING_POINT[0], self.STARTING_POINT[1])
+        end = grid.node(pos_x*3+1, pos_y*3+1)
+        finder = AStarFinder(diagonal_movement=DiagonalMovement.always)
+        path, runs = finder.find_path(start, end, grid)
+        print('operations:', runs, 'path length:', len(path))
+        print(grid.grid_str(path=path, start=start, end=end))
+
+        return True if path else False
+
+    def __temp_update_pathfinding_grid(self, grid,  pos_x: int, pos_y: int, card: Cards.TunnelCard):
+        for y in range(3):
+            for x in range(3):
+                grid[pos_y * 3 + y][pos_x * 3 + x] = card.grid[y][x]
+        return grid
 
     def update_pathfinding_grid(self, pos_x: int, pos_y: int, card: Cards.TunnelCard):
         for y in range(3):

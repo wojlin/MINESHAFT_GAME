@@ -102,8 +102,7 @@ class TunnelCard(Card):
         grid[1][2] = 1 if self.way_right else 0
         grid[2][1] = 1 if self.way_bottom else 0
         grid[1][0] = 1 if self.way_left else 0
-        points = int(self.way_top) + int(self.way_right) + int(self.way_bottom) + int(self.way_left)
-        grid[1][1] = 1 if points >= 2 else 0
+        grid[1][1] = 1
         return grid
 
     def symbol(self):
