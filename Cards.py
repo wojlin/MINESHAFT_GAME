@@ -102,7 +102,7 @@ class TunnelCard(Card):
         grid[1][2] = 1 if self.way_right else 0
         grid[2][1] = 1 if self.way_bottom else 0
         grid[1][0] = 1 if self.way_left else 0
-        grid[1][1] = 1
+        grid[1][1] = 1 if any([self.way_top, self.way_right, self.way_bottom, self.way_left]) else 0
         return grid
 
     def symbol(self):

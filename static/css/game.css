@@ -495,3 +495,60 @@
     margin-top:-0.5vh;
     width:5vh;
 }
+
+#popup
+{
+    position:absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    z-index:100;
+    background: rgba(0,0,0,0.9);
+    display:none;
+}
+
+#popup-message
+{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    background: rgb(20,20,20);
+    border: solid 0.5vh var(--border-color);
+    border-radius: 1vh;
+    padding: 4vh;
+    text-align:center;
+}
+
+#popup-message-title
+{
+    font-size: 3vh;
+    margin-bottom:3vh;
+}
+
+#popup-message-content
+{
+    font-size: 2vh;
+    margin:2vh;
+}
+
+#popup-message-button {
+    width: 100%;
+	margin: auto;
+	height: 4vh;
+	border: solid 0.3vh var(--border-color);
+	background: rgb(70, 70, 70);
+	color: white;
+	font-size: 2vh;
+	border-radius: 0.5vh;
+	transition: all 0.3s;
+	cursor: pointer;
+	opacity:1;
+	margin-top: 2vh;
+}
+
+#popup-message-button:hover
+{
+	transform: scale(1.05);
+}

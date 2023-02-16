@@ -2,7 +2,9 @@ var playerMove = ""
 
 function show_message(message)
 {
-    alert(message["message"])
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("popup-message-title").innerHTML = message["message_type"];
+    document.getElementById("popup-message-content").innerHTML = message["message"];
 }
 
 function update_game_status(message)

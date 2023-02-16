@@ -10,6 +10,13 @@
         <p id="data-game_id">{{game.game_id}}</p>
         <p id="data-player_id">{{player_id}}</p>
     </div>
+    <div id="popup">
+        <div id="popup-message">
+            <p id="popup-message-title">message</p>
+            <p id="popup-message-content">some random content</p>
+            <button id="popup-message-button" onclick="document.getElementById('popup').style.display='none';">ok</button>
+        </div>
+    </div>
     <div id="action-panel">
         <div id="action-panel_round-panel">
             <p>round <span id="action-panel-round_panel-round_text">{{game.round}}</span> / <span>{{game.ROUNDS_AMOUNT}}</span></p>
