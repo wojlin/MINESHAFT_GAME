@@ -253,13 +253,13 @@ class Game(GameEngine):
                 card = self.board[y][x]
                 if card.end_card:
                     if self.board[y][x-1].way_right:
-                        card.picture_url = card.goal + ".png"
+                        card.picture_url = "/load_image?filename=" + card.goal + ".png"
                     if self.board[y-1][x].way_bottom:
-                        card.picture_url = card.goal + ".png"
+                        card.picture_url = "/load_image?filename=" + card.goal + ".png"
                     if self.board[y][x+1].way_left:
-                        card.picture_url = card.goal + ".png"
+                        card.picture_url = "/load_image?filename=" + card.goal + ".png"
                     if self.board[y+1][x].way_top:
-                        card.picture_url = card.goal + ".png"
+                        card.picture_url = "/load_image?filename=" + card.goal + ".png"
 
         self.round_ended = self.check_winning_conditions()
         if self.round_ended:
