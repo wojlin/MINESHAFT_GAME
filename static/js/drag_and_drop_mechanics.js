@@ -113,14 +113,21 @@ function isMoveCorrect(current_element, place=false)
     {
         console.log('incorrect card type');
     }
-
-    if(!place)
+    if(moveMade)
     {
-        get_request('game/is_move_correct' + vars, showCorrectInfo);
-    }else
-    {
-        get_request('game/is_move_correct' + vars, placeElement);
+        document.getElementById("phantomCardTint").style.background = "red";
     }
+    else
+    {
+        if(!place)
+        {
+            get_request('game/is_move_correct' + vars, showCorrectInfo);
+        }else
+        {
+            get_request('game/is_move_correct' + vars, placeElement);
+        }
+    }
+
 
 }
 
@@ -135,6 +142,14 @@ document.addEventListener('click',(event) => {
             obj.src = "";
             console.log(selectedCard);
             createPhantomCard(obj, selectedCard);
+        }else
+        {
+            if(obj.getAttribute('src') == "")
+            {
+                console.log("placing card back");
+                obj.src = selectedCard;
+                removePhantomCard(null, force_delete = true)
+            }
         }
     }else if(obj.classList.contains("cell_dummy"))
     {
@@ -175,8 +190,12 @@ document.addEventListener('click',(event) => {
     }
     else
     {
-        console.log("card deselected");
-        removePhantomCard(null);
+        if(selectedCard != null)
+        {
+            console.log("card deselected");
+            removePhantomCard(null);
+        }
+
     }
 });
 
@@ -266,6 +285,16 @@ function cardMove(e)
             moveObject.style.width = phantomPlaceholderSize.toString() + 'px';
             moveObject.style.height = phantomPlaceholderSize.toString() + 'px';
             document.body.style.setProperty('cursor', 'pointer');
+           if( current_element.getAttribute('src')== "")
+           {
+             document.getElementById("phantomCardTint").style.background = "green";
+             console.log("card is moved back on own place");
+           }
+           else
+           {
+             document.getElementById("phantomCardTint").style.background = "red";
+             console.log("card is badly moved not on it's own place");
+           }
         }
         else
         {

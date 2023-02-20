@@ -84,8 +84,6 @@ class GameHandler(object):
             for game in self.games:
                 print(self.games[game].info())
                 self.games[game].dispose_ranks(list(self.games[game].players.items())[0], self.games[game].GOOD_PLAYER)
-                with open("path.txt", 'w') as file:
-                    file.write(self.games[game].pathfinding_grid_info())
 
             for room in self.rooms:
                 print(self.rooms[room].info())
@@ -589,9 +587,6 @@ class GameHandler(object):
                 if status is False:
                     return {"message_type": "error", "message": f"move is not valid"}
                 game.update_board(pos_x, pos_y, card)
-
-                with open('path.txt', 'w') as file:
-                    file.write(game.pathfinding_grid_info())
                 self.games[data["game_id"]].give_card_from_stack(data["player_id"], card.card_id)
             elif data["player_move"]["move_type"] == "action":
                 des_player_id = data["player_move"]["move_action"]['desired_player_id']

@@ -150,11 +150,19 @@ function get_request(url, callback)
 
 function end_turn(game_id, player_id)
 {
-    vars = "?game_id=" + game_id;
-    vars += "&player_id=" + player_id;
-    vars += "&player_move=" + JSON.stringify(playerMove) + "";
-    get_request("/game/end_turn"+vars, show_message);
-    turnEnd = true;
+    if(moveMade)
+    {
+        vars = "?game_id=" + game_id;
+        vars += "&player_id=" + player_id;
+        vars += "&player_move=" + JSON.stringify(playerMove) + "";
+        get_request("/game/end_turn"+vars, show_message);
+        turnEnd = true;
+    }
+    else
+    {
+        show_message({"message_type": "info", "message": "you need to make move before ending turn"});
+    }
+
 }
 
 
